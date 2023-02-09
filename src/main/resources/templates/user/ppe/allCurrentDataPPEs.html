@@ -1,0 +1,61 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Испытания СИЗ</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/5.0.0-alpha1/css/bootstrap.min.css">
+
+</head>
+<body>
+<header th:insert="blocks/header :: header"></header>
+
+<div class="container mt-5">
+    <h1>Испытания СИЗ</h1>
+    <form method="get" class="row g-3">
+        <div class="col-sm-2">
+            <!--Для центрирования-->
+        </div>
+
+        <div class="col-sm-8 alert text-center">
+            <h5 class="alert-heading">Испытания СИЗ</h5>
+            <table class="table table-primary table-bordered text-center table-hover" name="myTab">
+                <tbody>
+                <tr>
+                    <td>№</td>
+                    <td>Наименование СИЗ</td>
+                    <td>Количество</td>
+                    <td>Дата испытания</td>
+                    <td>Испытание</td>
+                </tr>
+                <th:each th:each="dataPPE, index : ${allDataPPEs}">
+                    <tr>
+                        <td th:text="${index.index+1}"></td>
+                        <td th:text="${dataPPE.ppe.name}"></td>
+                        <td th:text="${dataPPE.ppe.count}"></td>
+                        <td th:text="${#dates.format(dataPPE.ppe.testDate, 'dd.MM.yyyy')}"></td>
+                        <td>
+                            <a th:href="'/user/allPPEs/addTest/' + ${dataPPE.id}" class="btn btn-success my-auto">Испытание пройдено</a>
+                        </td>
+                    </tr>
+                </th:each>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="col-sm-2">
+            <!--Для центрирования-->
+        </div>
+        <div class="col-12">
+            <a th:href="'/user/allPPEs'" class="btn btn-secondary my-auto">Назад</a>
+        </div>
+    </form>
+</div>
+<div th:insert="blocks/footer :: footer"></div>
+<script th:inline="javascript">
+    function addTest(btnID){
+        document.getElementById(btnID).disabled = true;
+    }
+
+</script>
+</body>
+</html>

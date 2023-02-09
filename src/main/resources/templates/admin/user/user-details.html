@@ -1,0 +1,27 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Детальнее</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/5.0.0-alpha1/css/bootstrap.min.css">
+</head>
+<body>
+<header th:insert="blocks/header :: header"></header>
+
+<div class="container mt-5">
+    <div class="alert alert-info mt-2">
+        <h1 th:text="${user.username}"/>
+        <a th:href="'/admin/allDepartments/department-details/' + ${user.department.id}" th:text="${user.department.name}"/>
+    </div>
+    <div class="d-flex justify-content-start flex-wrap">
+        <form class="form-row">
+            <a th:href="'/admin/allUsers'" class="btn btn-secondary mx-auto">Назад</a>
+        </form>
+        <form th:action="'/admin/allUsers/user-details/' + ${user.id} +'/remove'" method="post">
+            <button class="btn btn-danger mx-1" type="submit">Удалить</button>
+        </form>
+    </div>
+</div>
+<div th:insert="blocks/footer :: footer"></div>
+</body>
+</html>

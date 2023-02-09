@@ -1,0 +1,34 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Администрирование</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/5.0.0-alpha1/css/bootstrap.min.css">
+
+</head>
+<body>
+<header th:insert="blocks/header :: header"></header>
+
+<!--Страница для вывода всех пользователей-->
+<div class="container mt-5">
+    <h1>Структурные подразделения</h1>
+    <div th:each="el : ${allDepartments}" class="alert alert-info mt-2">
+        <h3 th:text="${el.name}"/>
+        <a th:href="'/admin/allDepartments/department-details/' + ${el.id}" class="btn btn-warning">Детальнее</a>
+    </div>
+    <div class="pagination justify-content-start">
+        <div class="d-flex justify-content-start flex-wrap">
+            <a th:href="'/admin'" class="btn btn-secondary mx-auto">Назад</a>
+            <a th:href="'/admin/admin-addDepartment'" class="btn btn-success mx-1">Добавить структурное подразделение</a>
+        </div>
+    </div>
+</div>
+<div th:insert="blocks/footer :: footer"></div>
+<script th:inline="javascript">
+    var bool = /*[[${deleteError}]]*/
+    if(bool){
+        alert("Не возможно удалить подразделение, пока на нее ссылаются пользователи");
+    }
+</script>
+</body>
+</html>

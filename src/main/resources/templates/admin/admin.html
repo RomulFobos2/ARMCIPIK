@@ -1,0 +1,27 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Рабочая область</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/5.0.0-alpha1/css/bootstrap.min.css">
+
+</head>
+<body>
+<header th:insert="blocks/header :: header"></header>
+
+<!--Страница для вывода всех пользователей-->
+<div class="container mt-5">
+    <h1>Администрирование</h1>
+    <div class="alert alert-info mt-2">
+        <h3>Структурные подразделения</h3>
+        <a th:href="'/admin/allDepartments'" class="btn btn-warning">Детальнее</a>
+    </div>
+    <div class="alert alert-info mt-2">
+        <h3>Пользователи системы</h3>
+        <a th:href="'/admin/allUsers'" class="btn btn-warning">Детальнее</a>
+    </div>
+</div>
+
+<div th:insert="blocks/footer :: footer"></div>
+</body>
+</html>

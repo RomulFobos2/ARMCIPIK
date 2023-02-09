@@ -1,0 +1,62 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Список средств измерения</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/5.0.0-alpha1/css/bootstrap.min.css">
+
+</head>
+<body>
+<header th:insert="blocks/header :: header"></header>
+
+<div class="container mt-5">
+    <h1>Средства измерения</h1>
+
+    <br>
+    <div class="pagination justify-content-start">
+        <div class="d-flex justify-content-start flex-wrap">
+            <input type="text" name="inputSearch" id="inputSearch" class="form-control" oninput="search()"
+                   placeholder="Поиск...">
+        </div>
+    </div>
+    <br>
+
+    <th:each th:each="el, index : ${allMeasuringTools}">
+        <div class="alert alert-info mt-2" name="elements" th:id="${'elements_' + el.id}">
+            <h1 th:text="${index.index + 1 + '. ' + el.measuringToolName + '(' + el.factoryNumber + ').'}"/>
+            <a th:href="'/user/allMeasuringTools/measuringTool-details/' + ${el.id}"
+               class="btn btn-warning">Детальнее</a>
+        </div>
+    </th:each>
+    <div class="pagination justify-content-start">
+        <div class="d-flex justify-content-start flex-wrap">
+            <a th:href="'/user'" class="btn btn-secondary my-auto">Назад</a>
+            <a th:href="'/user/addMeasuringTool'" class="btn btn-success mx-1">Добавить средство измерения</a>
+            <a th:href="'/user/allCurrentVerification'" class="btn btn-info mx-1">Текущии поверки всех СИ</a>
+            <a th:href="'/user/allMeasuringTools/getReport'" class="btn btn-dark mx-1">Сформировать план-график</a>
+        </div>
+    </div>
+</div>
+<div th:insert="blocks/footer :: footer"></div>
+<script th:inline="javascript">
+    var bool = /*[[${deleteError}]]*/
+    if(bool){
+        alert("Не возможно удалить, пока на него ссылаются другие сущности");
+    }
+
+    function search(){
+        var objects = document.getElementsByName("elements");
+        var strSearch = document.getElementById("inputSearch").value;
+	    for(var i = 0; i < objects.length; i++){
+	        var text = objects[i].getElementsByTagName("h1")[0].innerHTML;
+	        if(text.includes(strSearch)){
+	            objects[i].hidden = false;
+	        }
+	        else{
+	            objects[i].hidden = true;
+	        }
+        }
+    }
+</script>
+</body>
+</html>

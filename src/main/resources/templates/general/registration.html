@@ -1,0 +1,111 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Регистрация</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/5.0.0-alpha1/css/bootstrap.min.css">
+
+    <style>
+html,
+body {
+  height: 100%;
+}
+
+body {
+  display: flex;
+  align-items: center;
+  padding-top: 40px;
+  padding-bottom: 40px;
+  background-color: #f5f5f5;
+}
+
+.form-signin {
+  width: 100%;
+  max-width: 430px;
+  padding: 15px;
+  margin: auto;
+}
+.form-signin .checkbox {
+  font-weight: 400;
+}
+.form-signin .form-control {
+  position: relative;
+  box-sizing: border-box;
+  height: auto;
+  padding: 10px;
+  font-size: 14px;
+}
+.form-signin .form-control:focus {
+  z-index: 2;
+}
+.form-signin input[type="email"] {
+  margin-bottom: -1px;
+  border-bottom-right-radius: 0;
+  border-bottom-left-radius: 0;
+}
+.form-signin input[type="text"] {
+  margin-bottom: -1px;
+  border-bottom-right-radius: 0;
+  border-bottom-left-radius: 0;
+}
+.form-signin input[type="password"] {
+  margin-bottom: -1px;
+  border-top-left-radius: 0;
+  border-top-right-radius: 0;
+}
+.form-signin button[type="submit"] {
+  margin-bottom: 10px;
+  border-top-left-radius: 0;
+  border-top-right-radius: 0;
+}
+.form-signin a{
+
+    font-size: 28px;
+}
+    </style>
+    <title>Регистрация пользователя</title>
+
+</head>
+<!--Ввести подсказку для формата пароля-->
+<!--Требования к паролю: не меньше 8 знаков, содержание заглавных и строчных букв и цифр.-->
+<body class="text-center">
+<main class="form-signin">
+    <div class="container mt-5 mb-5">
+        <form action="/registration" method="post">
+            <img class="mb-4" src="https://getbootstrap.com/docs/5.0/assets/brand/bootstrap-logo.svg" alt="" width="72"
+                 height="57">
+            <h1 class="h3 mb-3 fw-normal">Регистрация пользователя</h1>
+            <p class="fs-6 text-danger" th:text="${usernameError}"></p>
+            <p class="fs-6 text-danger" th:text="${passwordError}"></p>
+            <div class="row g-3">
+                <div class="col-sm-6">
+<!--                    <label for="inputLastName" class="form-label">Фамилия</label>-->
+                    <input type="text" class="form-control" name="inputLastName" id="inputLastName" required placeholder="Фамилия">
+                </div>
+                <div class="col-sm-6">
+<!--                    <label for="inputFirstName" class="form-label">Имя</label>-->
+                    <input type="text" class="form-control" name="inputFirstName" id="inputFirstName" required placeholder="Имя">
+                </div>
+                <div class="col-sm-9">
+<!--                    <label for="inputPatronymicName" class="form-label">Отчество</label>-->
+                    <input type="text" class="form-control" name="inputPatronymicName" id="inputPatronymicName" placeholder="Отчество (необязательно)">
+                </div>
+            </div><br>
+<!--            <input type="tel" name="username" placeholder="Введите номер телефона в формате +7XXXXXXXXXX" pattern="\+7[0-9]{10}" class="form-control"
+                   required><br>
+-->        <input type="email" name="username" placeholder="Введите адрес электронной почты" class="form-control"
+                  required><br>
+            <input type="password" name="password" placeholder="Введите пароль"
+                   class="form-control" required pattern="^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$" title="Требования к паролю: не менее 8 символов, заглавные и строчные латинские буквы, не менее 1 цифры"><br>
+            <input type="password" name="passwordConfirm" placeholder="Подтвердите пароль"
+                   class="form-control" required><br>
+            <button type="submit" class="w-100 btn btn-lg btn-primary">Зарегистрироваться</button>
+            <a class="p-2 text-dark" href="/">На главную</a>
+            <p class="mt-5 mb-3 text-muted">&copy;2020</p>
+        </form>
+    </div>
+</main>
+</body>
+</body>
+</html>
+

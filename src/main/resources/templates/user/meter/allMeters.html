@@ -1,0 +1,145 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Список счетчиков</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/5.0.0-alpha1/css/bootstrap.min.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" charset="utf-8">
+    <script type="text/javascript" src="/codebase/calendar.js?v=7.1.4"></script>
+    <link rel="stylesheet" href="/codebase/calendar.css?v=7.1.4">
+    <link rel="stylesheet" href="/common/index.css?v=7.1.4">
+    <link rel="stylesheet" href="/common/calendar.css?v=7.1.4">
+</head>
+<body>
+<header th:insert="blocks/header :: header"></header>
+
+<div class="container mt-5">
+    <h1>Счетчики</h1>
+
+    <br>
+    <div class="pagination justify-content-start">
+        <div class="d-flex justify-content-start flex-wrap">
+            <input type="text" name="inputSearch" id="inputSearch" class="form-control" oninput="search()"
+                   placeholder="Поиск...">
+        </div>
+    </div>
+    <br>
+
+    <div th:each="el, index : ${allMeters}" class="alert alert-info mt-2"  name="elements">
+        <h1 th:text="${index.index + 1 + '. ' + el.name}"/>
+        <a th:href="'/user/allMeters/meter-details/' + ${el.id}" class="btn btn-warning">Детальнее</a>
+    </div>
+    <div class="pagination justify-content-start">
+        <div class="d-flex justify-content-start flex-wrap">
+            <a th:href="'/user'" class="btn btn-secondary my-auto">Назад</a>
+            <a th:href="'/user/addMeter'" class="btn btn-success mx-1">Добавить средство измерения</a>
+            <a th:href="'/user/allCurrentDataMeters'" class="btn btn-info mx-1">Текущии не заполненые данные</a>
+            <a th:href="'/user/allMeters/import'" class="btn btn-danger mx-1">Импорт данных</a>
+        </div>
+    </div>
+
+    <div class="alert alert-info mt-2 text-center">
+        <h4>Статистика по ежедневному потреблению</h4>
+        <div class="row">
+            <div class="col-sm-12 text-center">
+                <br>
+                <h5>Выберите период</h5>
+            </div>
+            <div class="col-sm-3">
+                <div class="dhx_calendar-result">
+                    <!--                Невидимые поля для хранения даты -->
+                    <input type="text" class="form-control" name="resultFromInput" id="resultFromInput" hidden>
+                    <input type="text" class="form-control" name="resultToInput" id="resultToInput" hidden>
+                </div>
+            </div>
+            <div class="col-sm-6">
+                <section class="dhx_sample-container"
+                         style="-webkit-flex-wrap:wrap;-ms-flex-wrap:wrap;flex-wrap:wrap;">
+                    <div class="dhx_sample-container__widget" id="calendar1"
+                         style="margin-right: 0px; -webkit-box-pack: end; -webkit-justify-content: flex-end; -ms-flex-pack: end; justify-content: flex-end">
+                    </div>
+                    <div class="dhx_sample-container__widget" id="calendar2"
+                         style="margin-right: 0px; -webkit-box-pack: start; -webkit-justify-content: flex-start; -ms-flex-pack: start; justify-content: flex-start">
+                    </div>
+                </section>
+            </div>
+            <form class="col-sm-12 text-center">
+                <div>
+                    <br>
+                    <input type="text" class="form-control" name="resultFromInput" id="resultFromInput2" hidden>
+                    <input type="text" class="form-control" name="resultToInput" id="resultToInput2" hidden>
+                    <button type="submit" class="btn btn-primary" formaction="/user/allMeters/statistics"
+                            formmethod="post">Просмотреть статистику
+                    </button>
+                    <button id="btnGetReport" type="submit" class="btn btn-dark" formaction="/user/allMeters/getReport"
+                            formmethod="post">Сформировать отчет по ежедневному потреблению
+                    </button>
+                    <button id="btnGetPrognoz" type="submit" class="btn btn-primary" formaction="/user/allMeters/prognoz"
+                            formmethod="post">Просмотреть прогнозируемое потребление
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+</div>
+<div th:insert="blocks/footer :: footer"></div>
+<script th:inline="javascript">
+    var bool = /*[[${deleteError}]]*/
+    if(bool){
+        alert("Не возможно удалить, пока на него ссылаются другие сущности");
+    }
+
+    document.getElementById("resultFromInput").value = /*[[${#dates.format(#dates.createNow(), 'yyyy-MM-dd')}]]*/;
+    document.getElementById("resultToInput").value = /*[[${#dates.format(#dates.createNow(), 'yyyy-MM-dd')}]]*/;
+
+    document.getElementById("resultFromInput2").value = /*[[${#dates.format(#dates.createNow(), 'yyyy-MM-dd')}]]*/;
+    document.getElementById("resultToInput2").value = /*[[${#dates.format(#dates.createNow(), 'yyyy-MM-dd')}]]*/;
+
+    var calendar1 = new dhx.Calendar("calendar1", {
+    css: "dhx_widget--bordered", dateFormat:"%Y-%m-%d",
+    value: (/*[[${#dates.format(#dates.createNow(), 'yyyy-MM-dd')}]]*/),
+    disabledDates: function (date) { let max = new Date(); return (date>max)}
+    });
+
+    var calendar2 = new dhx.Calendar("calendar2", {
+    css: "dhx_widget--bordered", dateFormat:"%Y-%m-%d",
+    value: (/*[[${#dates.format(#dates.createNow(), 'yyyy-MM-dd')}]]*/),
+    disabledDates: function (date) { let max = new Date(); return (date>max)}
+    });
+
+    calendar1.link(calendar2);
+    calendar1.events.on("change", function (date) {
+    document.querySelector("#resultFromInput").value = calendar1.getValue();
+    });
+
+    calendar1.link(calendar2);
+    calendar1.events.on("change", function (date) {
+    document.querySelector("#resultFromInput2").value = calendar1.getValue();
+    });
+
+    calendar2.events.on("change", function (date) {
+    document.querySelector("#resultToInput").value = calendar2.getValue();
+    });
+
+    calendar2.events.on("change", function (date) {
+    document.querySelector("#resultToInput2").value = calendar2.getValue();
+    });
+
+     function search(){
+        var objects = document.getElementsByName("elements");
+        var strSearch = document.getElementById("inputSearch").value;
+	    for(var i = 0; i < objects.length; i++){
+	        var text = objects[i].getElementsByTagName("h1")[0].innerHTML;
+	        if(text.includes(strSearch)){
+	            objects[i].hidden = false;
+	        }
+	        else{
+	            objects[i].hidden = true;
+	        }
+        }
+    }
+
+</script>
+</body>
+</html>

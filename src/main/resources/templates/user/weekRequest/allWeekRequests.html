@@ -1,0 +1,120 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Список заявок на отпуск электроэнергии</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/5.0.0-alpha1/css/bootstrap.min.css">
+</head>
+<body>
+<header th:insert="blocks/header :: header"></header>
+
+<div class="container mt-5">
+    <h1>Заявки</h1>
+
+    <br>
+    <div class="pagination justify-content-start">
+        <div class="d-flex justify-content-start flex-wrap">
+            <input type="text" name="inputSearch" id="inputSearch" class="form-control" oninput="search()"
+                   placeholder="Поиск...">
+        </div>
+    </div>
+    <br>
+
+    <div th:each="el, index : ${allWeekRequests}" class="alert alert-info mt-2" name="elements"
+         th:id="${'elements_' + el.id}">
+        <h1 th:text="${index.index + 1 + '. Неделя №' + el.number}"/>
+        <a th:text="${'С ' + #dates.format(el.dateFrom, 'dd.MM.yyyy') + ' по ' + #dates.format(el.dateTo, 'dd.MM.yyyy')}"/>
+        <br>
+        <a th:href="'/user/allWeekRequests/weekRequest-details/' + ${el.id}" class="btn btn-warning">Детальнее</a>
+    </div>
+    <div class="pagination justify-content-start">
+        <div class="d-flex justify-content-start flex-wrap">
+            <a th:href="'/user'" class="btn btn-secondary my-auto">Назад</a>
+            <a th:href="'/user/addWeekRequest/firstStep'" class="btn btn-success mx-1">Сформировать заявку</a>
+            <form>
+                <button id="btnGetReport" type="submit" class="btn btn-dark"
+                        formaction="/user/allWeekRequests/getReportAudit"
+                        formmethod="post">Сформировать отчет по энергоаудиту
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!--    <div class="alert alert-info mt-2 text-center">-->
+    <!--        <h4>Данные по энергоаудиту</h4>-->
+    <!--        <div class="row">-->
+    <!--            <div class="col-sm-12 text-center">-->
+    <!--                <br>-->
+    <!--                <h5>Выберите период</h5>-->
+    <!--            </div>-->
+    <!--            <form class="col-sm-12 text-center row">-->
+    <!--                <div class="col-sm-5"></div>-->
+    <!--                <div class="col-sm-2">-->
+    <!--                    <label for="resultFromInput" class="form-label">с</label>-->
+    <!--                    <select class="form-select" name="resultFromInput" id="resultFromInput" required-->
+    <!--                            onchange="touchDate()">-->
+    <!--                        <option selected disabled value="">Выберите год</option>-->
+    <!--                        <th:each th:each="year : ${years}">-->
+    <!--                            <option th:value="${year}" th:text="${year}"></option>-->
+    <!--                        </th:each>-->
+    <!--                    </select>-->
+    <!--                </div>-->
+    <!--                <div class="col-sm-2">-->
+    <!--                    <label for="resultToInput" class="form-label">по</label>-->
+    <!--                    <select class="form-select" name="resultToInput" id="resultToInput" required-->
+    <!--                            disabled>-->
+    <!--                        <option selected disabled value="">Выберите год</option>-->
+    <!--                    </select>-->
+    <!--                </div>-->
+    <!--                <div class="col-sm-5"></div>-->
+    <!--                <div>-->
+    <!--                    <br>-->
+    <!--                    <button id="btnShowStatistic" type="submit" class="btn btn-primary" formaction="/user/allWeekRequests/statisticsAudit"-->
+    <!--                            formmethod="post" >Просмотреть данные по энергоаудиту-->
+    <!--                    </button>-->
+    <!--                    <button id="btnGetReport" type="submit" class="btn btn-dark" formaction="/user/allWeekRequests/getReportAudit"-->
+    <!--                            formmethod="post" >Сформировать отчет по энергоаудиту-->
+    <!--                    </button>-->
+    <!--                </div>-->
+    <!--            </form>-->
+    <!--        </div>-->
+    <!--    </div>-->
+
+
+</div>
+<div th:insert="blocks/footer :: footer"></div>
+<script th:inline="javascript">
+        function search(){
+            var objects = document.getElementsByName("elements");
+            var strSearch = document.getElementById("inputSearch").value;
+            for(var i = 0; i < objects.length; i++){
+                var text = objects[i].getElementsByTagName("h1")[0].innerHTML;
+                if(text.includes(strSearch)){
+                    objects[i].hidden = false;
+                }
+                else{
+                    objects[i].hidden = true;
+                }
+            }
+        }
+
+        function touchDate(){
+            var years = /*[[${years}]]*/;
+            var selectYear = document.getElementById('resultFromInput').value
+
+            var newYear = [];
+
+            for(var i = 0; i < years.length; i++){
+                if(years[i] > selectYear){
+                    newYear.push(years[i]);
+                }
+            }
+
+            document.getElementById('btnShowStatistic').disabled = false;
+            document.getElementById('btnGetReport').disabled = false;
+<!--            document.getElementById('resultToInput').disabled = false;-->
+        }
+
+</script>
+</body>
+</html>

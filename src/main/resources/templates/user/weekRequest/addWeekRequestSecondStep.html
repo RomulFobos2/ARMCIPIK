@@ -1,0 +1,182 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Заявка на отпуск электроэнергии</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/5.0.0-alpha1/css/bootstrap.min.css">
+</head>
+<body>
+<header th:insert="blocks/header :: header"></header>
+<div class="container-sm">
+    <br>
+    <form action="/user/addWeekRequest/secondStep" method="post" class="row g-3">
+        <div class="row g-3 col-sm-12 alert alert-primary text-dark font-weight-bold text-center">
+            <h5 class="alert-heading">Создание недельной заявки на отпуск электроэнергии</h5>
+            <a th:text="${'В ' + department.name + ' c ' + #dates.format(dateFrom, 'dd.MM.yyyy') + ' по ' + #dates.format(dateTo, 'dd.MM.yyyy')}"></a>
+            <hr>
+            <a th:text="${'Кол-во рабочих дней - ' + countWorkDay}"></a>
+            <th:each class="col-sm-1" th:each="timeForWeekRequest, index : ${listTimeForWeekRequest}">
+                <div>
+                    <label class="form-label" th:text="${timeForWeekRequest}"></label>
+                    <th:if th:if="${myService.getInfoAboutHour(timeForWeekRequest)}">
+                        <input type="number" class="form-control" name="inputValue"
+                               th:id="${'inputValue' + index.index}"
+                               min="1" step="1" required th:value="${inputValue}" onchange="calcAll()">
+                    </th:if>
+                    <th:if th:if="${!myService.getInfoAboutHour(timeForWeekRequest)}">
+                        <input type="number" class="form-control" name="inputValue"
+                               th:id="${'inputValue' + index.index}"
+                               min="1" step="1" required th:value="${energyInWorkHour}" onchange="calcAll()">
+                    </th:if>
+                </div>
+            </th:each>
+            <hr>
+            <a th:text="${'Кол-во выходных и праздничных дней - ' + countWorkOffDay}"></a>
+            <th:each class="col-sm-1" th:each="timeForWeekRequest, index : ${listTimeForWeekRequest}">
+                <div>
+                    <label class="form-label" th:text="${timeForWeekRequest}"></label>
+                    <input type="number" class="form-control" name="inputValueWorkOff"
+                           th:id="${'inputValueWorkOff' + index.index}"
+                           min="1" step="1" required th:value="${inputValue}" onchange="calcAll()">
+                </div>
+            </th:each>
+
+        </div>
+
+
+        <div class="col-sm-2">
+            <label for="inputMax" class="form-label">Максимальная нагрузка, кВт</label>
+            <input type="text" name="inputMax" id="inputMax" class="form-control"
+                   onchange="calcAll()">
+        </div>
+
+        <div class="col-sm-2">
+            <label for="inputMin" class="form-label">Минимальная нагрузка, кВт</label>
+            <input type="text" name="inputMin" id="inputMin" class="form-control"
+                   onchange="calcAll()">
+        </div>
+        <div class="col-sm-2">
+            <label for="inputMiddle" class="form-label">Среднесуточная нагрузка (рабочие дни), кВт</label>
+            <input type="text" name="inputMiddle" id="inputMiddle" class="form-control"
+                   onchange="calcAll()">
+        </div>
+        <div class="col-sm-2">
+            <label for="inputAllDay" class="form-label">Потребление в сутки (рабочие дни), кВт</label>
+            <input type="text" name="inputAllDay" id="inputAllDay" class="form-control"
+                   onchange="calcAll()">
+        </div>
+        <div class="col-sm-2">
+            <label for="inputMiddle" class="form-label">Среднесуточная нагрузка (выходные дни), кВт</label>
+            <input type="text" name="inputMiddleWorkOff" id="inputMiddleWorkOff" class="form-control"
+                   onchange="calcAll()">
+        </div>
+        <div class="col-sm-2">
+            <label for="inputAllDay" class="form-label">Потребление в сутки (выходные дни), кВт</label>
+            <input type="text" name="inputAllDayWorkOff" id="inputAllDayWorkOff" class="form-control"
+                   onchange="calcAll()">
+        </div>
+
+
+        <div class="col-sm-4">
+            <label for="inputAllWeek" class="form-label">Потребление электроэнергии в рабочии дни, <br> кВт:</label>
+            <input type="text" name="inputAllWorkDays" id="inputAllWorkDays" class="form-control"
+                   onchange="calcAll()">
+        </div>
+
+        <div class="col-sm-4">
+            <label for="inputAllWeek" class="form-label">Потребление электроэнергии в выходные и праздничные дни,
+                кВт</label>
+            <input type="text" name="inputAllWorkOffDays" id="inputAllWorkOffDays" class="form-control"
+                   onchange="calcAll()">
+        </div>
+
+        <div class="col-sm-4">
+            <label for="inputAllWeek" class="form-label">Потребление электроэнергии за неделю, <br> кВт</label>
+            <input type="text" name="inputAllWeek" id="inputAllWeek" class="form-control"
+                   onchange="calcAll()">
+        </div>
+
+        <div class="col-12">
+            <button type="submit" class="btn btn-primary">Добавить</button>
+            <a th:href="'/user/allWeekRequests'" class="btn btn-secondary my-2">Вернуться</a>
+        </div>
+    </form>
+</div>
+<div th:insert="blocks/footer :: footer"></div>
+<script th:inline="javascript">
+    calcAll();
+    calibrovka();
+
+    function calibrovka(){
+        var allEnergyInWeek = /*[[${allEnergyInWeek}]]*/;
+        var mysumma = document.getElementById('inputAllWeek').value;
+        var dif = allEnergyInWeek*1 - mysumma*1;
+        var index = 8;
+        var inputValue = document.getElementsByName('inputValue');
+        while(dif > 0){
+            inputValue[index].value = inputValue[index].value*1+1;
+            calcAll();
+            dif = allEnergyInWeek*1 - document.getElementById('inputAllWeek').value*1;
+            index++;
+            if(index > 15){
+            index = 8;
+            }
+        }
+
+    }
+
+    function calcAll(){
+        var countWorkDay = /*[[${countWorkDay}]]*/;
+        var countWorkOffDay = /*[[${countWorkOffDay}]]*/;
+
+
+        var inputValue = document.getElementsByName('inputValue');
+        var inputValueWorkOff = document.getElementsByName('inputValueWorkOff');
+
+        var summaWorkDay = 0;
+        var summaWorkOffDay = 0;
+        var max = 0;
+        var min = 100000;
+
+        for (var i = 0; i < inputValue.length; i++) {
+            summaWorkDay += inputValue[i].value*1;
+            if(max < (inputValue[i].value*1)){
+                max = inputValue[i].value*1;
+            }
+            if(min > (inputValue[i].value*1)){
+                min = inputValue[i].value*1;
+            }
+        }
+
+        for (var i = 0; i < inputValueWorkOff.length; i++) {
+            summaWorkOffDay += inputValueWorkOff[i].value*1;
+            if(max < (inputValueWorkOff[i].value*1)){
+                max = inputValueWorkOff[i].value*1;
+            }
+            if(min > (inputValueWorkOff[i].value*1)){
+                min = inputValueWorkOff[i].value*1;
+            }
+        }
+
+        var middleWorkDay = summaWorkDay / 24;
+        var middleWorkOffDay = summaWorkOffDay / 24;
+
+        document.getElementById('inputMax').value = max;
+        document.getElementById('inputMin').value = min;
+
+        document.getElementById('inputMiddle').value = middleWorkDay;
+        document.getElementById('inputAllDay').value = summaWorkDay;
+
+        document.getElementById('inputMiddleWorkOff').value = middleWorkOffDay;
+        document.getElementById('inputAllDayWorkOff').value = summaWorkOffDay;
+
+        document.getElementById('inputAllWorkDays').value = summaWorkDay * countWorkDay;
+        document.getElementById('inputAllWorkOffDays').value = summaWorkOffDay * countWorkOffDay;
+        document.getElementById('inputAllWeek').value = (summaWorkDay * countWorkDay) + (summaWorkOffDay * countWorkOffDay);
+    }
+
+</script>
+</body>
+</html>
+
+

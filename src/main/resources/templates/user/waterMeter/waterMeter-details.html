@@ -1,0 +1,80 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Детальнее</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/5.0.0-alpha1/css/bootstrap.min.css">
+</head>
+<body>
+<header th:insert="blocks/header :: header"></header>
+
+<div class="container mt-5">
+    <div class="alert alert-info mt-2">
+        <h1 th:text="${waterMeter.name}"/>
+        </a><a th:text="${'Заводской номер прибора учета: ' + waterMeter.factoryNumber}"/>
+        <br>
+        </a><a th:text="${'Место установки прибора учета: ' + waterMeter.cabinet}"/>
+        <br>
+        </a><a th:if="${waterMeter.drinkWater}" th:text="${'Прибор учета питьевой воды'}"/>
+        </a><a th:if="${waterMeter.hotWater}" th:text="${'Прибор учета горячей воды'}"/>
+        </a><a th:if="${waterMeter.techWater}" th:text="${'Прибор учета технической воды'}"/>
+    </div>
+
+    <div class="col-sm-12 alert alert-primary">
+        <h5 class="alert-heading">Данные водопотребления</h5>
+        <table class="table table-primary table-bordered text-center table-hover align-middle" name="myTab">
+            <tbody>
+            <tr>
+                <td>Месяц, год</td>
+                <td>Место установки прибора учета</td>
+                <td>Марка прибора учета</td>
+                <td>Заводской номер прибора учета</td>
+                <td>Тип счетчика</td>
+                <td>Показания прибора учета на начало месяца</td>
+                <td>Показания прибора учета на конец месяца</td>
+                <td>Расход воды за месяц, м3
+                </td>
+            </tr>
+            <th:each th:each="month, index : ${monthList}">
+                <th:if th:if="${waterMeter.checkDataWaterMeter(month)}">
+                    <tr>
+                        <td>
+                            <th:text th:text="${myService.getMonthName(month)}"></th:text>
+                            <br>
+                            <th:text th:text="${#dates.format(month, 'yyyy')}"></th:text>
+                        </td>
+                        <td th:text="${waterMeter.cabinet}"></td>
+                        <td th:text="${waterMeter.name}"></td>
+                        <td th:text="${waterMeter.factoryNumber}"></td>
+                        <td>
+                            <a th:if="${waterMeter.drinkWater}">Счетчик питьевой воды</a>
+                            <a th:if="${waterMeter.hotWater}">Счетчик горячей воды</a>
+                            <a th:if="${waterMeter.techWater}">Счетчик технической воды</a>
+                        </td>
+                        <td th:text="${waterMeter.findDataWaterMeter(month, true).valueMeter}"></td>
+                        <td th:if="${waterMeter.findDataWaterMeter(month, false) == null}"
+                            th:text="${'Данные не снимались'}"></td>
+                        <td th:if="${waterMeter.findDataWaterMeter(month, false) != null}"
+                            th:text="${waterMeter.findDataWaterMeter(month, false).valueMeter}"></td>
+                        <td th:text="${waterMeter.calcValueInMonth(month)}"></td>
+                    </tr>
+                </th:if>
+            </th:each>
+            </tbody>
+        </table>
+    </div>
+
+    <div class="d-flex justify-content-start flex-wrap">
+        <form class="form-row">
+            <a th:href="'/user/editWaterMeter/' + ${waterMeter.id}" class="btn btn-warning">Редактировать</a>
+            <a th:href="'/user/allWaterMeters'" class="btn btn-secondary mx-auto">Назад</a>
+        </form>
+        <form th:action="'/user/allWaterMeters/waterMeter-details/' + ${waterMeter.id} +'/remove'" method="post">
+            <button class="btn btn-danger mx-1" type="submit">Удалить</button>
+        </form>
+    </div>
+</div>
+</div>
+<div th:insert="blocks/footer :: footer"></div>
+</body>
+</html>

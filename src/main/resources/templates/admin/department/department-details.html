@@ -1,0 +1,49 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Панель администратора</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/5.0.0-alpha1/css/bootstrap.min.css">
+    <style>
+        .blue{
+            background-color: #4682B4
+        }
+    </style>
+</head>
+<body>
+<header th:insert="blocks/header :: header"></header>
+
+<div class="container mt-5">
+    <div class="alert alert-info mt-2">
+        <h1 th:text="${department.name}"/>
+        <div class="row">
+            <div class="col-sm-10">
+                <a th:text="${department.shortDescription}"/>
+            </div>
+            <div class="col-sm-2">
+                <a>Адрес: </a> <a th:text="${department.address}"/><br>
+                <a>Email: </a> <a th:text="${department.email}"/><br>
+                <a>Телефон: </a> <a th:text="${department.number}"/><br>
+<!--                <a>Роль для этого подразделения: </a> <a th:text="${department.departmentRole.name}"/>-->
+            </div>
+        </div>
+    </div>
+    <div class="p-4 p-md-5 mb-4 text-white rounded blue">
+        <div class="col-md-12 px-0">
+            <h1>Информация о структурном подразделении</h1>
+            <p class="lead my-3" th:utext="${#strings.replace(department.description,line_separator,'&lt;br /&gt;')}"></p>
+        </div>
+    </div>
+    <div class="d-flex justify-content-start flex-wrap">
+        <form class="form-row">
+            <a th:href="'/admin/allDepartments'" class="btn btn-secondary mx-auto">Назад</a>
+            <a th:href="'/admin/editDepartment/' + ${department.id}" class="btn btn-warning">Редактировать</a><br><br>
+        </form>
+        <form th:action="'/admin/allDepartments/department-details/' + ${department.id} +'/remove'" method="post">
+            <button class="btn btn-danger mx-1" type="submit">Удалить</button>
+        </form>
+    </div>
+</div>
+<div th:insert="blocks/footer :: footer"></div>
+</body>
+</html>

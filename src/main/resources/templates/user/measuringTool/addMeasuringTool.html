@@ -1,0 +1,226 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Добавить средство измерения</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/5.0.0-alpha1/css/bootstrap.min.css">
+</head>
+<body>
+<header th:insert="blocks/header :: header"></header>
+<div class="container-sm">
+    <h1>Добавление средства измерения</h1>
+    <form action="/user/addMeasuringTool" method="post" class="row g-3">
+        <p class="fs-6 text-danger" th:text="${measuringToolFactoryNumberError}"></p>
+
+        <div class="row g-3 text-dark font-weight-bold">
+            <h5 class="alert-heading">Основная информация</h5>
+
+            <div class="col-sm-6">
+                <label for="inputOfficeName" class="form-label">Наименование филиала</label>
+                <input type="text" class="form-control" name="inputOfficeName" id="inputOfficeName" required>
+            </div>
+
+            <div class="col-sm-6">
+                <label for="inputDepartmentName" class="form-label">Наименование (номер) эксплуатирующего подразделения
+                    филиала</label>
+                <input type="text" class="form-control" name="inputDepartmentName" id="inputDepartmentName" required>
+            </div>
+
+            <div class="col-sm-3">
+                <!--                Для центрирования)-->
+            </div>
+
+            <div class="col-sm-4">
+                <label for="inputMeasuringToolName" class="form-label">Наименование и тип СИ</label>
+                <input type="text" class="form-control" name="inputMeasuringToolName" id="inputMeasuringToolName"
+                       required list=measuringName>
+                <datalist id=measuringName>
+                    <th:each th:each="measuringName : ${allMeasuringNames}">
+                        <option th:text="${measuringName}"></option>
+                    </th:each>
+                </datalist>
+            </div>
+
+
+
+            <div class="col-sm-2">
+                <label for="inputFactoryNumber" class="form-label">Заводской номер СИ</label>
+                <input type="text" class="form-control" name="inputFactoryNumber" id="inputFactoryNumber" required>
+            </div>
+
+            <div class="col-sm-3">
+                <!--                Для центрирования)-->
+            </div>
+        </div>
+
+
+        <div class="row g-3 col-sm-12 alert alert-success text-dark font-weight-bold">
+            <h5 class="alert-heading">Характеристики средства измерения</h5>
+
+            <div class="col-sm-2">
+                <label for="inputMeasuringRange" class="form-label">Диапазон измерений СИ</label>
+                <input type="text" class="form-control" name="inputMeasuringRange" id="inputMeasuringRange" required>
+            </div>
+
+            <div class="col-sm-3">
+                <label for="inputAccuracyClass" class="form-label">Класс точности (погрешность) СИ</label>
+                <input type="text" class="form-control" name="inputAccuracyClass" id="inputAccuracyClass" required>
+            </div>
+
+            <div class="col-sm-4">
+                <label for="inputRegistrationNumberStateRegister" class="form-label">Регистрационный номер типа СИ в
+                    Госреестре</label>
+                <input type="text" class="form-control" name="inputRegistrationNumberStateRegister"
+                       id="inputRegistrationNumberStateRegister" required>
+            </div>
+
+            <div class="col-sm-3">
+                <label for="inputCountVerification" class="form-label">Периодичность поверки СИ (месяцы)</label>
+                <input type="number" class="form-control" name="inputCountVerification" id="inputCountVerification"
+                       placeholder="Только цифры" title="Только цифры" onchange="touchDate()"
+                       pattern="\d" step="1" min="1" max="72"
+                       required>
+            </div>
+
+            <div class="col-sm-4">
+                <label for="inputScopeOfApplication" class="form-label">Сфера применения СИ</label>
+                <select class="form-select" name="inputScopeOfApplication" id="inputScopeOfApplication" required>
+                    <option value="0">Нет</option>
+                    <option value="1">СГОЕИ</option>
+                </select>
+            </div>
+
+            <div class="col-sm-4">
+                <label for="inputReducedVerification" class="form-label">Сокращенная поверка СИ</label>
+                <select class="form-select" name="inputReducedVerification" id="inputReducedVerification" required>
+                    <option value="0">Нет</option>
+                    <option value="1">СП</option>
+                </select>
+            </div>
+
+            <div class="col-sm-4">
+                <label for="inputCheckingGRCM" class="form-label">Поверка СИ в ГРЦМ</label>
+                <select class="form-select" name="inputCheckingGRCM" id="inputCheckingGRCM" required>
+                    <option value="0">Нет</option>
+                    <option value="1">ГРМЦ</option>
+                </select>
+            </div>
+        </div>
+
+
+        <div class="row g-3 col-sm-12 alert alert-primary text-dark font-weight-bold">
+            <h5 class="alert-heading">Сведения о поверки</h5>
+
+            <div class="col-sm-2">
+                <label for="inputVerificationDate" class="form-label">Дата поверки СИ</label>
+                <input type="date" name="inputVerificationDate" id="inputVerificationDate" class="form-control"
+                       th:max="${#dates.format(#dates.createNow(), 'yyyy-MM-dd')}"
+                       onchange="touchDate()"
+                       required>
+            </div>
+
+            <div class="col-sm-4">
+                <label for="inputVerifyingOrganization" class="form-label">Организация-поверитель, выполнившая
+                    поверку</label>
+                <input type="text" class="form-control" name="inputVerifyingOrganization"
+                       id="inputVerifyingOrganization" required>
+            </div>
+
+            <div class="col-sm-3">
+                <label for="inputCertificateNumber" class="form-label">Номер свидетельства/извещения СИ</label>
+                <input type="text" class="form-control" name="inputCertificateNumber" id="inputCertificateNumber"
+                       required>
+            </div>
+
+            <div class="col-sm-3">
+                <label for="inputAvailability" class="form-label">Пригодность СИ</label>
+                <select class="form-select" name="inputAvailability" id="inputAvailability" required
+                        onchange="touchSelect()">
+                    <option value="0">Не пригоден</option>
+                    <option selected value="1">Пригоден</option>
+                </select>
+            </div>
+            <div class="col-sm-3">
+                <label for="inputNextVerificationDate" class="form-label">Дата следующей поверки СИ</label>
+                <input type="date" name="inputNextVerificationDate" id="inputNextVerificationDate" class="form-control"
+                       th:min="${#dates.format(#dates.createNow(), 'yyyy-MM-dd')}"
+                       onchange="checkNextVerDate()"
+                       required>
+            </div>
+
+            <div class="col-sm-9">
+                <label for="inputBasisForDecommissioning" class="form-label">Основание для вывода из эксплуатации СИ (в
+                    поверке/в ремонте)</label>
+                <input type="text" class="form-control" name="inputBasisForDecommissioning"
+                       id="inputBasisForDecommissioning" disabled required>
+            </div>
+
+        </div>
+
+
+        <div class="col-12">
+            <button type="submit" class="btn btn-primary">Добавить</button>
+            <a th:href="'/user/allMeasuringTools'" class="btn btn-secondary my-2">Вернуться</a>
+        </div>
+    </form>
+</div>
+<div th:insert="blocks/footer :: footer"></div>
+<script th:inline="javascript">
+    function touchSelect(){
+        var inputAvailability = document.getElementById('inputAvailability');
+        document.getElementById('inputBasisForDecommissioning').value = "";
+        if(inputAvailability.value == 0){
+            document.getElementById('inputBasisForDecommissioning').disabled = false;
+        }
+        else{
+            document.getElementById('inputBasisForDecommissioning').disabled = true;
+        }
+    }
+
+    function touchDate(){
+        if(dayOff('inputVerificationDate') != 0){
+            alert("Выбран не рабочий день для поверки. Пожалуйста, выберите другую дату.");
+            document.getElementById('inputVerificationDate').value = '';
+            document.getElementById('inputNextVerificationDate').value = '';
+        }
+        else{
+            var countMonth = document.getElementById('inputCountVerification').value;
+            var strDate = document.getElementById('inputVerificationDate').value;
+            var date = new Date(strDate);
+            date.setMonth(date.getMonth()*1 + countMonth*1);
+            document.getElementById('inputNextVerificationDate').valueAsDate = date;
+            while(dayOff('inputNextVerificationDate') != 0){
+                var strDateNext = document.getElementById('inputNextVerificationDate').value;
+                var dateNext = new Date(strDateNext);
+                dateNext.setDate(dateNext.getDate()*1-1)
+                document.getElementById('inputNextVerificationDate').valueAsDate = dateNext;
+            }
+        }
+    }
+
+    //Получаю код дня. 0 - рабочий, 1 - не рабочий
+    function dayOff(strElementById){
+        var date = document.getElementById(strElementById).value.replace(/-/g, '');
+        var xhr = new XMLHttpRequest();
+        xhr.withCredentials = false;
+        var responseDayOff;
+        xhr.open("GET", `http://isdayoff.ru/${date}`, false);
+        xhr.send();
+        return xhr.responseText;
+    }
+
+    //Если пользователь меняют дату следующей поверки, ставим ее обратно в зависимости от даты последней поверки
+    function checkNextVerDate(){
+        if(document.getElementById('inputVerificationDate').value == ''){
+            alert("Вначале выберите дату уже прошедшей поверки");
+            document.getElementById('inputNextVerificationDate').value = '';
+        }
+        else{
+            touchDate();
+        }
+    }
+</script>
+</body>
+</html>
+
+

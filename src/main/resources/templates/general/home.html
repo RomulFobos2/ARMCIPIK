@@ -1,0 +1,23 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title th:text="${title}"/>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/5.0.0-alpha1/css/bootstrap.min.css">
+</head>
+<!--<body>-->
+<body style="background-image: url('/images/fon.jpeg')">
+<header th:insert="blocks/header :: header"></header>
+    <main class="px-3 text-black fw-bold shadow-lg text-center">
+        <br>
+        <h1 class="fw-bold shadow-lg">Центр испытания и применения измерительного комплекса</h1>
+        <br>
+        <br>
+        <p class="lead">
+        <h4 class="fw-bold">Автоматизированное рабочее место</h4>
+        <h4 class="fw-bold">начальника группы эксплуатации зданий, сооружений и систем энергоснабжения предприятия</h4>
+    </main>
+
+<div th:insert="blocks/footer :: footer"></div>
+</body>
+</html>

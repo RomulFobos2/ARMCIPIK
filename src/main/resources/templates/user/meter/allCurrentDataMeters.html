@@ -1,0 +1,61 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Заполнить показания счетчиков</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/5.0.0-alpha1/css/bootstrap.min.css">
+
+</head>
+<body>
+<header th:insert="blocks/header :: header"></header>
+
+<div class="container mt-5">
+    <h1>Заполнить показания счетчиков</h1>
+    <form method="post" class="row g-3">
+        <div class="col-sm-2">
+<!--Для центрирования-->
+        </div>
+
+        <div class="col-sm-8 alert text-center">
+            <h5 class="alert-heading">Показания счетчиков</h5>
+            <table class="table table-primary table-bordered text-center table-hover" name="myTab">
+                <tbody>
+                <tr>
+                    <td>№</td>
+                    <td>Счетчик</td>
+                    <td>Показания</td>
+                    <td>Дата</td>
+                </tr>
+                <tr th:each="dataMeters, index : ${allDataMeters}">
+                    <td th:text="${index.index+1}"></td>
+                    <td th:text="${dataMeters.meter.name}"></td>
+                    <td>
+                        <div class="col-sm-6">
+                            <input type="text" class="form-control" name="dataMeterId" id="dataMeterId"
+                                   placeholder="Невидимое поле, чтобы считать id"
+                                   th:value="${dataMeters.id}" hidden>
+                        </div>
+                        <div class="col-sm-12">
+                            <input type="number" min="0" class="form-control" name="inputValueMeter"
+                                   id="inputValueMeter"
+                                   required placeholder="Показания">
+                        </div>
+                    </td>
+                    <td th:text="${#dates.format(dataMeters.dateOfDataMeter, 'dd.MM.yyyy')}"></td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="col-sm-2">
+            <!--Для центрирования-->
+        </div>
+        <div class="col-12">
+            <button th:if="${allDataMeters.size > 0}" type="submit" class="btn btn-primary">Добавить</button>
+            <a th:href="'/user/allMeters'" class="btn btn-secondary my-auto">Назад</a>
+        </div>
+    </form>
+</div>
+<div th:insert="blocks/footer :: footer"></div>
+</body>
+</html>

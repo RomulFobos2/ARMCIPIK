@@ -1,0 +1,184 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Добавить направление развития</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/5.0.0-alpha1/css/bootstrap.min.css">
+</head>
+<body>
+<header th:insert="blocks/header :: header"></header>
+<div class="container-sm">
+    <h1>Формирование накладной</h1>
+    <br>
+    <br>
+    <form action="/user/bill/getReport" method="post" class="row g-3">
+        <div class="col-sm-3">
+            <input type="text" class="form-control" name="inputDepartment1"
+                   id="inputDepartment1" required
+                   placeholder="Отправитель"><br>
+        </div>
+        <div class="col-sm-3">
+            <input type="text" class="form-control" name="inputTypeDepartment1"
+                   id="inputTypeDepartment1"
+                   placeholder="Вид деятельности"><br>
+        </div>
+
+        <div class="col-sm-3">
+            <input type="text" class="form-control" name="inputDepartment2"
+                   id="inputDepartment2" required
+                   placeholder="Получатель"><br>
+        </div>
+        <div class="col-sm-3">
+            <input type="text" class="form-control" name="inputTypeDepartment2"
+                   id="inputTypeDepartment2"
+                   placeholder="Вид деятельности"><br>
+        </div>
+
+
+        <div class="row g-3 col-sm-12 alert alert-info text-dark font-weight-bold">
+            <h5 class="alert-heading">Финансовая информация</h5>
+
+            <div class="col-sm-3">
+                <label for="inputTypeOperation" class="form-label">Код вида операции</label>
+                <input type="text" class="form-control" name="inputTypeOperation" id="inputTypeOperation">
+            </div>
+
+            <div class="col-sm-2">
+                <label for="inputBill" class="form-label">Счёт, субсчет</label>
+                <input type="text" class="form-control" name="inputBill" id="inputBill">
+            </div>
+
+            <div class="col-sm-3">
+                <label for="inputCodeAnal" class="form-label">Код аналитического учета</label>
+                <input type="text" class="form-control" name="inputCodeAnal"
+                       id="inputCodeAnal">
+            </div>
+
+            <div class="col-sm-4">
+                <label for="inputHZ" class="form-label">Учётная единица выпуска</label>
+                <input type="text" class="form-control" name="inputHZ"
+                       id="inputHZ">
+            </div>
+        </div>
+
+
+        <div class="col-sm-2">
+        </div>
+        <div class="row g-3 alert alert-success">
+            <div class="col-sm-12" name="formPPE" id="formPPE">
+                <div id="div1">
+                    <div style="display:flex">
+                        <input type="text" class="form-control" name="inputPPENames"
+                               id="inputPPENames_1" required
+                               placeholder="Выберите СИЗ" list=allPPENames>
+                        <datalist id=allPPENames>
+                            <th:each th:each="ppeName : ${allPPENames}">
+                                <option th:text="${ppeName}"></option>
+                            </th:each>
+                        </datalist>
+                        <a></a>
+                        <input type="number" step="1" min="1" class="form-control" name="inputCounts"
+                               id="inputCounts_1" required onchange="calc(1)"
+                               placeholder="Кол-во СИЗ">
+                        <input type="text" class="form-control" name="inputNomenclature"
+                               id="inputNomenclature_1" required
+                               placeholder="Номенклатурный номер">
+                        <input type="number" step="1" min="1" class="form-control" name="inputPrice"
+                               id="inputPrice_1" required onchange="calc(1)"
+                               placeholder="Цена">
+                        <input type="number" step="1" min="1" class="form-control" name="inputSumma"
+                               id="inputSumma_1" required onchange="calc(1)"
+                               placeholder="Сумма">
+                        <input type="number" step="1" min="1" class="form-control" name="inputCodeEI"
+                               id="inputCodeEI_1" required
+                               placeholder="Код">
+                        <input type="text" class="form-control" name="inputNameEI"
+                               id="inputNameEI_1" required
+                               placeholder="Ед.изм">
+                        <input type="text" class="form-control" name="inputLastColumn"
+                               id="inputLastColumn_1" required
+                               placeholder="№ по картотеке">
+                        <br>
+                    </div>
+                    <br>
+                    <div id="div2"></div>
+                </div>
+            </div>
+            <br>
+            <div class="col-sm-6">
+            </div>
+            <div class="col-sm-2">
+                <input type="button" class="btn btn-dark" value="+" onclick="addField()">
+                <input type="button" class="btn btn-danger" value="-" onclick="deleteField()">
+            </div>
+        </div>
+        <div class="col-12">
+            <button type="submit" class="btn btn-primary">Добавить</button>
+            <a th:href="'/user/'" class="btn btn-secondary my-2">Вернуться</a>
+        </div>
+    </form>
+</div>
+<div th:insert="blocks/footer :: footer"></div>
+<script th:inline="javascript">
+    var countField = 1;
+
+    function addField(){
+        countField = countField + 1;
+        var htmlInput = `<div style="display:flex">
+        <input type="text" class="form-control" name="inputPPENames" id="inputPPENames_` + countField + `" required
+                           placeholder="Выберите СИЗ" list=allPPENames>
+                           <input type="number" step="1" min="1" class="form-control" name="inputCounts"
+                                   id="inputCounts_` + countField + `" required onchange="calc(` + countField + `)"
+                                   placeholder="Количество СИЗ">
+                           <input type="text" class="form-control" name="inputNomenclature"
+                               id="inputNomenclature_` + countField + `" required
+                               placeholder="Номенклатурный номер">
+                           <input type="number" step="1" min="1" class="form-control" name="inputPrice"
+                               id="inputPrice_` + countField + `" required onchange="calc(` + countField + `)"
+                               placeholder="Цена">
+                           <input type="number" step="1" min="1" class="form-control" name="inputSumma"
+                               id="inputSumma_` + countField + `" required onchange="calc(` + countField + `)"
+                               placeholder="Сумма">
+                           <input type="number" step="1" min="1" class="form-control" name="inputCodeEI"
+                               id="inputCodeEI_` + countField + `" required
+                               placeholder="Код">
+                           <input type="text" class="form-control" name="inputNameEI"
+                               id="inputNameEI_` + countField + `" required
+                               placeholder="Ед.изм">
+                            <input type="text" class="form-control" name="inputLastColumn"
+                               id="inputLastColumn_` + countField + `" required
+                               placeholder="№ по картотеке">
+                          </div><br><div id="div`+ (countField+1) + `"></div>`;
+        var inputForQuestion = document.getElementById('div' + countField).innerHTML = htmlInput;
+    }
+
+
+    function deleteField(){
+        if(countField > 1){
+            var inputForQuestion = document.getElementById('div' + countField);
+            inputForQuestion.parentNode.removeChild(inputForQuestion);
+            countField = countField - 1;
+            var htmlInput = `<div id="div`+ (countField+1) + `"></div>`;
+            var strFromInput = document.getElementById('inputPPENames_' + countField).value;
+            var inputForQuestion = document.getElementById('div' + countField).innerHTML += htmlInput;
+            document.getElementById('inputPPENames_' + countField).value = strFromInput;
+
+            var strFromInput = document.getElementById('inputCounts_' + countField).value;
+            document.getElementById('inputCounts_' + countField).value = strFromInput;
+        }
+    }
+
+    function calc(index){
+        var price = document.getElementById('inputPrice_' + index).value;
+        var count = document.getElementById('inputCounts_' + index).value;
+        document.getElementById('inputSumma_' + index).value =    price * count;
+
+    }
+
+
+
+</script>
+</body>
+</html>
+
+

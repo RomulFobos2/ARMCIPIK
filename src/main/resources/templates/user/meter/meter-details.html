@@ -1,0 +1,70 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Детальнее</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/5.0.0-alpha1/css/bootstrap.min.css">
+</head>
+<body>
+<header th:insert="blocks/header :: header"></header>
+
+<div class="container mt-5">
+    <div class="row g-3">
+
+        <th:each th:each="year, indexYear : ${yearsDataMeter}">
+            <a class="alert-heading" th:href="'#hidden' + ${indexYear.index}"
+               th:onclick="'view(\'hidden' + ${indexYear.index} + '\'); return false'"
+               th:text="'Сведения о измерениях за ' + ${year} + 'год (Раскрыть/Скрыть)'"></a>
+            <div class="col-sm-12 alert alert-primary text-center" th:id="'hidden' + ${indexYear.index}"
+                 style="display: none;">
+                <h5 class="alert-heading" th:text="${'Сведения о измерениях ' + meter.name}"></h5>
+                <table class="table table-secondary table-bordered text-center table-hover" name="myTab">
+                    <tbody>
+                    <tr class="table-secondary">
+                        <td>№</td>
+                        <td>Значение</td>
+                        <td>День недели</td>
+                        <td>Дата</td>
+                        <td>ФИО снявшего показания</td>
+                    </tr>
+                    <th:each th:each="dataMeter, index : ${meter.allDataMeters}">
+                        <th:if th:if="${#dates.format(dataMeter.dateOfDataMeter, 'yyyy') == year}">
+                        <tr class="table-striped">
+                            <td th:text="${index.index+1}">/td>
+                            <td th:if="${dataMeter.valueMeter != ''}" th:text="${dataMeter.valueMeter}">/td>
+                            <td th:if="${dataMeter.valueMeter == ''}" th:text="${'Не заполнено'}">/td>
+                            <td th:text="${dataMeter.nameDay}"></td>
+                            <td th:text="${#dates.format(dataMeter.dateOfDataMeter, 'dd.MM.yyyy')}"></td>
+                            <td th:if="${dataMeter.user != null}" th:text="${dataMeter.user.fullName}"></td>
+                            <td th:if="${dataMeter.user == null}"></td>
+                        </tr>
+                        </th:if>
+                    </th:each>
+                    </tbody>
+                </table>
+            </div>
+        </th:each>
+
+
+        <div class="d-flex justify-content-start flex-wrap">
+            <form class="form-row">
+                <!--                <a th:if=${haveCurrentDataMeter} th:href="'/user/allMeters/meter-details/' + ${meter.id} + '/currentDataMeter/' + ${currentDataMeter.id}" class="btn btn-info">Текущее измерение</a>-->
+                <a th:href="'/user/editMeter/' + ${meter.id}" class="btn btn-warning">Редактировать</a>
+                <a th:href="'/user/allMeters'" class="btn btn-secondary mx-auto">Назад</a>
+            </form>
+            <form th:action="'/user/allMeters/meter-details/' + ${meter.id} +'/remove'" method="post">
+                <button class="btn btn-danger mx-1" type="submit">Удалить</button>
+            </form>
+        </div>
+    </div>
+</div>
+<div th:insert="blocks/footer :: footer"></div>
+</body>
+<script th:inline="javascript">
+    function view(n) {
+        style = document.getElementById(n).style;
+        style.display = (style.display == 'block') ? 'none' : 'block';
+    }
+
+</script>
+</html>

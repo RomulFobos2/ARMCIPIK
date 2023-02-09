@@ -1,0 +1,128 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Изменить средство измерения</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/5.0.0-alpha1/css/bootstrap.min.css">
+</head>
+<body>
+<header th:insert="blocks/header :: header"></header>
+<div class="container-sm">
+    <h1>Изменение средства измерения</h1>
+    <form method="post" class="row g-3">
+        <p class="fs-6 text-danger" th:text="${measuringToolFactoryNumberError}"></p>
+
+        <div class="row g-3 text-dark font-weight-bold">
+            <h5 class="alert-heading">Основная информация</h5>
+
+            <div class="col-sm-6">
+                <label for="inputOfficeName" class="form-label">Наименование филиала</label>
+                <input type="text" class="form-control" name="inputOfficeName" id="inputOfficeName"
+                       th:value="${measuringTool.officeName}" required>
+            </div>
+
+            <div class="col-sm-6">
+                <label for="inputDepartmentName" class="form-label">Наименование (номер) эксплуатирующего подразделения
+                    филиала</label>
+                <input type="text" class="form-control" name="inputDepartmentName" id="inputDepartmentName"
+                       th:value="${measuringTool.departmentName}" required>
+            </div>
+
+            <div class="col-sm-3">
+                <!--                Для центрирования)-->
+            </div>
+
+            <div class="col-sm-4">
+                <label for="inputMeasuringToolName" class="form-label">Наименование и тип СИ</label>
+                <input type="text" class="form-control" name="inputMeasuringToolName" id="inputMeasuringToolName"
+                       th:value="${measuringTool.measuringToolName}" required>
+            </div>
+
+            <div class="col-sm-2">
+                <label for="inputFactoryNumber" class="form-label">Заводской номер СИ</label>
+                <input type="text" class="form-control" name="inputFactoryNumber" id="inputFactoryNumber"
+                       th:value="${measuringTool.factoryNumber}" required>
+            </div>
+
+            <div class="col-sm-3">
+                <!--                Для центрирования)-->
+            </div>
+        </div>
+
+
+        <div class="row g-3 col-sm-12 alert alert-success text-dark font-weight-bold">
+            <h5 class="alert-heading">Характеристики средства измерения</h5>
+
+            <div class="col-sm-2">
+                <label for="inputMeasuringRange" class="form-label">Диапазон измерений СИ</label>
+                <input type="text" class="form-control" name="inputMeasuringRange" id="inputMeasuringRange"
+                       th:value="${measuringTool.measuringRange}" required>
+            </div>
+
+            <div class="col-sm-3">
+                <label for="inputAccuracyClass" class="form-label">Класс точности (погрешность) СИ</label>
+                <input type="text" class="form-control" name="inputAccuracyClass" id="inputAccuracyClass"
+                       th:value="${measuringTool.accuracyClass}" required>
+            </div>
+
+            <div class="col-sm-4">
+                <label for="inputRegistrationNumberStateRegister" class="form-label">Регистрационный номер типа СИ в
+                    Госреестре</label>
+                <input type="text" class="form-control" name="inputRegistrationNumberStateRegister"
+                       id="inputRegistrationNumberStateRegister" th:value="${measuringTool.registrationNumberStateRegister}" required>
+            </div>
+
+            <div class="col-sm-3">
+                <label for="inputCountVerification" class="form-label">Периодичность поверки СИ (месяцы)</label>
+                <input type="number" class="form-control" name="inputCountVerification" id="inputCountVerification"
+                       placeholder="Только цифры" title="Только цифры"
+                       pattern="\d" step="1" min="1" max="72"
+                       th:value="${measuringTool.countVerification}" required>
+            </div>
+
+            <div class="col-sm-4">
+                <label for="inputScopeOfApplication" class="form-label">Сфера применения СИ</label>
+                <select class="form-select" name="inputScopeOfApplication" id="inputScopeOfApplication" required>
+                    <option selected th:if="${measuringTool.scopeOfApplication} == false" value="0" th:text="Нет"></option>
+                    <option th:if="${measuringTool.scopeOfApplication} == false" value="1" th:text="СГОЕИ"></option>
+                    <option selected th:if="${measuringTool.scopeOfApplication} == true" value="1" th:text="СГОЕИ"></option>
+                    <option th:if="${measuringTool.scopeOfApplication} == true" value="0" th:text="Нет"></option>
+
+                </select>
+            </div>
+
+            <div class="col-sm-4">
+                <label for="inputReducedVerification" class="form-label">Сокращенная поверка СИ</label>
+                <select class="form-select" name="inputReducedVerification" id="inputReducedVerification" required>
+                    <option selected th:if="${measuringTool.reducedVerification} == false" value="0" th:text="Нет"></option>
+                    <option th:if="${measuringTool.reducedVerification} == false" value="1" th:text="СП"></option>
+
+                    <option selected th:if="${measuringTool.reducedVerification} == true" value="1" th:text="СП"></option>
+                    <option th:if="${measuringTool.reducedVerification} == true" value="0" th:text="Нет"></option>
+                </select>
+            </div>
+
+            <div class="col-sm-4">
+                <label for="inputCheckingGRCM" class="form-label">Поверка СИ в ГРЦМ</label>
+                <select class="form-select" name="inputCheckingGRCM" id="inputCheckingGRCM" required>
+                    <option selected th:if="${measuringTool.checkingGRCM} == false" value="0" th:text="Нет"></option>
+                    <option th:if="${measuringTool.checkingGRCM} == false" value="1" th:text="ГРМЦ"></option>
+                    <option selected th:if="${measuringTool.checkingGRCM} == true" value="1" th:text="ГРМЦ"></option>
+                    <option th:if="${measuringTool.checkingGRCM} == true" value="0" th:text="Нет"></option>
+                </select>
+            </div>
+        </div>
+
+        <div class="col-12">
+            <button type="submit" class="btn btn-primary">Добавить</button>
+            <a th:href="'/user/allMeasuringTools'" class="btn btn-secondary my-2">Вернуться</a>
+        </div>
+    </form>
+</div>
+<div th:insert="blocks/footer :: footer"></div>
+<script th:inline="javascript">
+</script>
+</body>
+</html>
+
+

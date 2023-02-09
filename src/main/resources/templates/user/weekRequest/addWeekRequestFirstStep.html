@@ -1,0 +1,51 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Заявка на отпуск электроэнергии</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/5.0.0-alpha1/css/bootstrap.min.css">
+</head>
+<body>
+<header th:insert="blocks/header :: header"></header>
+<div class="container-sm">
+    <br>
+    <form action="/user/addWeekRequest/firstStep" method="post" class="row g-3">
+        <div class="row g-3 col-sm-12 alert alert-primary text-dark font-weight-bold text-center">
+            <h5 class="alert-heading">Создание недельной заявки на отпуск электроэнергии</h5>
+            <div class="col-sm-5">
+            </div>
+
+            <div class="col-sm-2">
+                <label for="inputWeek" class="form-label">Период</label>
+                <input type="week" name="inputWeek" id="inputWeek" class="form-control"
+                       required>
+            </div>
+
+            <div class="col-sm-5">
+            </div>
+
+            <div class="col-sm-3">
+            </div>
+<!--            <a>Потребление электроэнергии в нерабочии часы</a>-->
+            <div class="col-sm-5">
+            </div>
+            <div class="col-sm-2" hidden>
+                <input type="number" class="form-control" name="inputValue"
+                       required value="13">
+            </div>
+            <div class="col-sm-5">
+            </div>
+
+        </div>
+
+        <div class="col-12">
+            <button type="submit" class="btn btn-primary">Далее</button>
+            <a th:href="'/user/allWeekRequests'" class="btn btn-secondary my-2">Вернуться</a>
+        </div>
+    </form>
+</div>
+<div th:insert="blocks/footer :: footer"></div>
+</body>
+</html>
+
+

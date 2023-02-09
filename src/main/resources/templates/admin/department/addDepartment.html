@@ -1,0 +1,51 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Администрирование</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/5.0.0-alpha1/css/bootstrap.min.css">
+</head>
+
+<body>
+<header th:insert="blocks/header :: header"></header>
+<div class="container-sm">
+    <h1>Добавление структурного подразделения</h1>
+    <p class="fs-6 text-danger" th:text="${departmentNameError}"></p>
+    <form action="/admin/addDepartment" method="post" class="row g-3">
+        <div class="col-sm-6">
+            <label for="inputDepartment" class="form-label">Название структурного подразделения</label>
+            <input type="text" class="form-control" name="inputDepartment" id="inputDepartment" required>
+        </div>
+        <div class="col-sm-6">
+            <label for="inputDepartmentRole" class="form-label">Роль для структурного подразделения</label>
+            <input type="text" class="form-control" name="inputDepartmentRole" id="inputDepartmentRole" required pattern="^[A-Za-z]{4,10}" placeholder="Только латинские буквы">
+        </div>
+        <div class="col-sm-4">
+            <label for="inputAddress" class="form-label">Адрес структурного подразделения</label>
+            <input type="text" class="form-control" name="inputAddress" id="inputAddress" required>
+        </div>
+        <div class="col-sm-4">
+            <label for="inputEmail" class="form-label">Email структурного подразделения</label>
+            <input type="email" class="form-control" name="inputEmail" id="inputEmail" required>
+        </div>
+        <div class="col-sm-4">
+            <label for="inputTel" class="form-label">Телефон структурного подразделения</label>
+            <input type="tel" class="form-control" name="inputTel" id="inputTel" required>
+        </div>
+        <div class="col-sm-12">
+            <label for="inputShortDescription" class="form-label">Краткое описание структурного подразделения</label>
+            <textarea class="form-control" name="inputShortDescription" id="inputShortDescription" maxlength="300" wrap="soft" rows="4" required></textarea>
+        </div>
+        <div class="col-sm-12">
+            <label for="inputDescription" class="form-label">Информация о структурном подразделении</label>
+            <textarea class="form-control" name="inputDescription" id="inputDescription" maxlength="10000" wrap="soft" rows="10" required></textarea>
+        </div>
+        <div class="col-12">
+            <button type="submit" class="btn btn-primary">Добавить</button>
+            <a th:href="'/admin/allDepartments'" class="btn btn-secondary my-2">Назад</a>
+        </div>
+    </form>
+</div>
+<div th:insert="blocks/footer :: footer"></div>
+</body>
+</html>

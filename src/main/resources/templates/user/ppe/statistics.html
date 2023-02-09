@@ -1,0 +1,49 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Информация о испытаниях СИЗ</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/5.0.0-alpha1/css/bootstrap.min.css">
+</head>
+<body>
+<header th:insert="blocks/header :: header"></header>
+
+<div class="container mt-5">
+    <div class="row g-3">
+        <div class="col-sm-12 alert alert-secondary text-center">
+            <h5 class="alert-heading">График проведения испытания СИЗ</h5>
+            <a th:text="${'За период: ' + #dates.format(dateFrom, 'dd.MM.yyyy') + ' - ' + #dates.format(dateTo, 'dd.MM.yyyy')}"></a>
+            <br>
+            <a th:text="${department.name}"></a>
+            <table class="table table-primary table-bordered text-center table-hover align-middle" name="myTab">
+                <tbody>
+                <tr>
+                    <td>№</td>
+                    <td>Наименование СИЗ</td>
+                    <td>Количество</td>
+                    <td>Дата испытания</td>
+                    <td>Проведено/Не проведено</td>
+                </tr>
+                <th:each th:each="dataPPE, index : ${allDataPPEs}">
+                            <tr>
+                                <td th:text="${index.index+1}"></td>
+                                <td th:text="${dataPPE.ppe.name}"></td>
+                                <td th:text="${dataPPE.ppe.count}"></td>
+                                <td th:text="${#dates.format(dataPPE.dateOfDataPPE, 'dd.MM.yyyy')}"></td>
+                                <td th:if="${dataPPE.finishTest}">Проведено</td>
+                                <td th:if="${!dataPPE.finishTest}">Не проведено</td>
+                            </tr>
+                </th:each>
+                </tbody>
+            </table>
+        </div>
+        <div class="d-flex justify-content-start flex-wrap">
+            <form class="form-row">
+                <a th:href="'/user/allPPEs'" class="btn btn-secondary mx-auto">Назад</a>
+            </form>
+        </div>
+    </div>
+</div>
+<div th:insert="blocks/footer :: footer"></div>
+</body>
+</html>

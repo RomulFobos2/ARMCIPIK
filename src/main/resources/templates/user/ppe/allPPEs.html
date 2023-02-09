@@ -1,0 +1,108 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Список СИЗ</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/5.0.0-alpha1/css/bootstrap.min.css">
+</head>
+<body>
+<header th:insert="blocks/header :: header"></header>
+
+<div class="container mt-5">
+    <h1>СИЗ</h1>
+
+    <br>
+    <div class="pagination justify-content-start">
+        <div class="d-flex justify-content-start flex-wrap">
+            <input type="text" name="inputSearch" id="inputSearch" class="form-control" oninput="search()"
+                   placeholder="Поиск...">
+        </div>
+    </div>
+    <br>
+
+    <div th:each="el, index : ${allPPEs}" class="alert alert-info mt-2"  name="elements">
+        <h1 th:text="${index.index + 1 + '. ' + el.name + ' (Количество: ' + el.count + ')'}"/>
+        <a th:href="'/user/allPPEs/ppe-details/' + ${el.id}" class="btn btn-warning">Детальнее</a>
+    </div>
+    <div class="pagination justify-content-start">
+        <div class="d-flex justify-content-start flex-wrap">
+            <a th:href="'/user'" class="btn btn-secondary my-auto">Назад</a>
+            <a th:href="'/user/addPPE'" class="btn btn-success mx-1">Добавить СИЗ</a>
+            <a th:href="'/user/allPPEs/allCurrentDataPPEs'" class="btn btn-success mx-1">Не пройденные испатания СИЗ</a>
+            <a th:href="'/user/allPPEs/getReport_2'" class="btn btn-success mx-1">Скачать график проведения испытаний</a>
+        </div>
+    </div>
+
+    <div class="alert alert-info mt-2 text-center">
+        <h4>Графики проведения испытаний</h4>
+        <div class="row">
+            <div class="col-sm-12 text-center">
+                <br>
+                <h5>Выберите период</h5>
+            </div>
+            <form class="col-sm-12 text-center row">
+                <div class="col-sm-4"></div>
+                <div class="col-sm-2">
+                    <label for="resultFromInput" class="form-label">с</label>
+                    <input type="month" name="resultFromInput" id="resultFromInput" class="form-control"
+                           required onchange="touchDate()">
+                </div>
+                <div class="col-sm-2">
+                    <label for="resultToInput" class="form-label">по</label>
+                    <input type="month" name="resultToInput" id="resultToInput" class="form-control"
+                           required disabled>
+                </div>
+                <div class="col-sm-4"></div>
+                <div>
+                    <br>
+                    <button id="btnShowStatistic" type="submit" class="btn btn-primary" formaction="/user/allPPEs/statistics"
+                            formmethod="post" disabled>Просмотреть отчет по испытаниям СИЗ
+                    </button>
+                    <button id="btnGetReport" type="submit" class="btn btn-dark" formaction="/user/allPPEs/getReport_1"
+                            formmethod="post" disabled>Скачать отчет по испытаниям СИЗ
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+</div>
+<div th:insert="blocks/footer :: footer"></div>
+<script th:inline="javascript">
+    var bool = /*[[${deleteError}]]*/
+    if(bool){
+        alert("Не возможно удалить, пока на него ссылаются другие сущности");
+    }
+
+    function touchDate(){
+        var strDateFrom = document.getElementById('resultFromInput').value;
+        var dateFrom = new Date(strDateFrom);
+        if(dateFrom.getMonth() < 9){
+            var strMin = dateFrom.getFullYear() + '-0' + (dateFrom.getMonth()*1+1);
+        }
+        else{
+            var strMin = dateFrom.getFullYear() + '-' + (dateFrom.getMonth()*1+1);
+        }
+        document.getElementById('btnShowStatistic').disabled = false;
+        document.getElementById('btnGetReport').disabled = false;
+        document.getElementById('resultToInput').disabled = false;
+        document.getElementById('resultToInput').min = strMin;
+    }
+
+     function search(){
+        var objects = document.getElementsByName("elements");
+        var strSearch = document.getElementById("inputSearch").value;
+	    for(var i = 0; i < objects.length; i++){
+	        var text = objects[i].getElementsByTagName("h1")[0].innerHTML;
+	        if(text.includes(strSearch)){
+	            objects[i].hidden = false;
+	        }
+	        else{
+	            objects[i].hidden = true;
+	        }
+        }
+    }
+
+</script>
+</body>
+</html>

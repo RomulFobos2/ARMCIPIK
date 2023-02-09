@@ -1,0 +1,89 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Информация о прогнозируемом потреблении</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/5.0.0-alpha1/css/bootstrap.min.css">
+    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+</head>
+<body>
+<header th:insert="blocks/header :: header"></header>
+
+<div class="container mt-5">
+    <div class="row g-3">
+        <div class="col-sm-12 alert alert-secondary text-center">
+            <h5 class="alert-heading">Прогнозируемое потребление</h5>
+            <a th:text="${'За период: ' + #dates.format(dateFrom, 'dd.MM.yyyy') + ' - ' + #dates.format(dateTo, 'dd.MM.yyyy')}"></a>
+            <table class="table table-info table-bordered text-center table-hover" name="myTab">
+                <tbody>
+                <tr class="table-danger">
+                    <td>Дата/Счетчик</td>
+                    <th:each th:each="meter, indexMetersColumn : ${allMeters}">
+                        <td th:text="${meter.name}"></td>
+                    </th:each>
+                </tr>
+                <tr class="table-striped" th:each="datePeriod, indexDatePeriod : ${dateList}">
+                    <td>
+                        <a th:text="${#dates.format(datePeriod, 'dd.MM.yyyy')} + ' (' + ${#dates.format(datePeriod, 'EEEE')} + ')'"></a>
+                    </td>
+                    <th:each th:each="meter, indexMetersRow : ${allMeters}">
+                        <td th:text="${meter.getPrognoses(datePeriod, yearsDataMeter)}">
+                        </td>
+                    </th:each>
+                </tr>
+                </tbody>
+            </table>
+            <a th:text="${'Плановая, кВт: ' + summaPrognoses}"></a>
+            <br>
+        </div>
+
+        <div class="col-sm-3"></div>
+
+        <div id="curve_chart" class="col-sm-6" style="width: 900px; height: 500px"></div>
+
+        <div class="col-sm-3"></div>
+    </div>
+</div>
+<div th:insert="blocks/footer :: footer"></div>
+</body>
+<script th:inline="javascript">
+google.charts.load('current', {'packages':['corechart']});
+      google.charts.setOnLoadCallback(drawChart);
+
+        var listPrognoz = [];
+        /*[# th:each="prognozValue : ${prognozForChart}"]*/
+        listPrognoz.push(/*[[${prognozValue}]]*/);
+        /*[/]*/
+
+        var listDate = [];
+        /*[# th:each="date : ${dateForChart}"]*/
+        listDate.push(/*[[${date}]]*/);
+        /*[/]*/
+
+        var title = ['Дата', 'Прогноз']
+        var myData = [];
+        myData.push(title);
+        for(var i = 0; i < listDate.length; i++){
+        var varArr = [];
+           varArr.push(listDate[i], listPrognoz[i]);
+           myData.push(varArr);
+        }
+        console.log(myData);
+
+
+
+      function drawChart() {
+        var data = google.visualization.arrayToDataTable(myData);
+
+        var options = {
+          title: 'График прогнозируемых затрат электроэнергии',
+          curveType: 'function',
+          legend: { position: 'bottom' }
+        };
+
+        var chart = new google.visualization.LineChart(document.getElementById('curve_chart'));
+
+        chart.draw(data, options);}
+
+</script>
+</html>

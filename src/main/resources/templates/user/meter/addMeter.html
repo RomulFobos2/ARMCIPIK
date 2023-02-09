@@ -1,0 +1,92 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Добавить счетчик</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/5.0.0-alpha1/css/bootstrap.min.css">
+
+    <style>
+html,
+body {
+  height: 100%;
+}
+
+body {
+  display: flex;
+  align-items: center;
+  padding-top: 40px;
+  padding-bottom: 40px;
+  background-color: #f5f5f5;
+}
+
+.form-signin {
+  width: 100%;
+  max-width: 430px;
+  padding: 15px;
+  margin: auto;
+}
+.form-signin .checkbox {
+  font-weight: 400;
+}
+.form-signin .form-control {
+  position: relative;
+  box-sizing: border-box;
+  height: auto;
+  padding: 10px;
+  font-size: 14px;
+}
+.form-signin .form-control:focus {
+  z-index: 2;
+}
+.form-signin input[type="email"] {
+  margin-bottom: -1px;
+  border-bottom-right-radius: 0;
+  border-bottom-left-radius: 0;
+}
+.form-signin input[type="text"] {
+  margin-bottom: -1px;
+  border-bottom-right-radius: 0;
+  border-bottom-left-radius: 0;
+}
+.form-signin input[type="password"] {
+  margin-bottom: -1px;
+  border-top-left-radius: 0;
+  border-top-right-radius: 0;
+}
+.form-signin button[type="submit"] {
+  margin-bottom: 10px;
+  border-top-left-radius: 0;
+  border-top-right-radius: 0;
+}
+.form-signin a{
+
+    font-size: 28px;
+}
+    </style>
+
+</head>
+<!--Ввести подсказку для формата пароля-->
+<!--Требования к паролю: не меньше 8 знаков, содержание заглавных и строчных букв и цифр.-->
+<body class="text-center">
+<main class="form-signin">
+    <div class="container mt-5 mb-5">
+        <form action="/user/addMeter" method="post">
+            <img class="mb-4" src="https://getbootstrap.com/docs/5.0/assets/brand/bootstrap-logo.svg" alt="" width="72"
+                 height="57">
+            <h1 class="h3 mb-3 fw-normal">Добавление счетчика</h1>
+            <p class="fs-6 text-danger" th:text="${meterNameError}"></p>
+            <div class="row g-3">
+                <div class="col-sm-12">
+                    <input type="text" class="form-control" name="inputName" id="inputName" required placeholder="Имя счетчика">
+                </div>
+            </div><br>
+            <button type="submit" class="w-100 btn btn-lg btn-primary">Добавить</button>
+            <a class="p-2 text-dark" th:href="'/user/allMeters'">Вернуться</a>
+            <p class="mt-5 mb-3 text-muted">&copy;2022</p>
+        </form>
+    </div>
+</main>
+</body>
+</body>
+</html>
+

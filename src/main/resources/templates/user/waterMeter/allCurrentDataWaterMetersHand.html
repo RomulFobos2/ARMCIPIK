@@ -1,0 +1,144 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Заполнить показания счетчиков водопотребления</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/5.0.0-alpha1/css/bootstrap.min.css">
+
+</head>
+<body>
+<header th:insert="blocks/header :: header"></header>
+
+<div class="container mt-5">
+    <h1>Заполнить показания счетчиков водопотребления</h1>
+    <form method="post" onsubmit="return getRequest()" class="row g-3">
+        <div class="col-sm-2">
+            <!--Для центрирования-->
+        </div>
+
+        <div class="col-sm-8 alert text-center">
+            <h5 class="alert-heading">Показания счетчиков водопотребления</h5>
+<!--            <br>-->
+<!--            <div class="col-sm-12 row g-3">-->
+<!--                <div class="col-sm-3">-->
+<!--                    &lt;!&ndash;Для центрирования&ndash;&gt;-->
+<!--                </div>-->
+<!--                <div class="col-sm-3">-->
+<!--                    <select class="form-select" name="inputStartMonth" id="inputStartMonth" required>-->
+<!--                        <option value="0">Начало месяца</option>-->
+<!--                        <option value="1">Конец месяца</option>-->
+<!--                    </select>-->
+
+<!--                </div>-->
+
+<!--                <div class="col-sm-3">-->
+<!--                    <select class="form-select" name="inputMonth" id="inputMonth" required>-->
+<!--                        <option value="0">Январь</option>-->
+<!--                        <option value="1">Февраль</option>-->
+<!--                        <option value="2">Март</option>-->
+<!--                        <option value="3">Апрель</option>-->
+<!--                        <option value="4">Май</option>-->
+<!--                        <option value="5">Июнь</option>-->
+<!--                        <option value="6">Июль</option>-->
+<!--                        <option value="7">Август</option>-->
+<!--                        <option value="8">Сентябрь</option>-->
+<!--                        <option value="9">Октябрь</option>-->
+<!--                        <option value="10">Ноябрь</option>-->
+<!--                        <option value="11">Декабрь</option>-->
+<!--                    </select>-->
+<!--                </div>-->
+<!--                <div class="col-sm-3">-->
+<!--                    &lt;!&ndash;Для центрирования&ndash;&gt;-->
+<!--                </div>-->
+<!--            </div>-->
+            <br>
+            <table class="table table-primary table-bordered text-center table-hover align-middle" name="myTab">
+                <tbody>
+                <tr>
+                    <td>№</td>
+                    <td>Место установки прибора учета</td>
+                    <td>Марка прибора учета</td>
+                    <td>Заводской номер прибора учета</td>
+                    <td>Показания прибора учета</td>
+                    <td>Дата показаний</td>
+                </tr>
+                <tr th:each="waterMeter, index : ${allWaterMeters}">
+                    <td th:text="${index.index+1}"></td>
+                    <td th:text="${waterMeter.cabinet}"></td>
+                    <td th:text="${waterMeter.name}"></td>
+                    <td th:text="${waterMeter.factoryNumber}"></td>
+                    <td>
+                        <div class="col-sm-6">
+                            <input type="text" class="form-control" name="waterMeterId" th:id="${'waterMeterId_' + index.index}"
+                                   placeholder="Невидимое поле, чтобы считать id"
+                                   th:value="${waterMeter.id}" hidden>
+                        </div>
+                        <div class="col-sm-12">
+                            <input type="number" min="0" class="form-control" name="inputValueWaterMeter"
+                                   th:id="${'inputValueWaterMeter_' + (index.index+1)}" placeholder="Показания" th:onchange="'updateValueDate(' + ${index.index+1} + ')'">
+                        </div>
+                    </td>
+                <td>
+                    <input type="date" name="inputValueDate" th:id="${'inputValueDate_' + (index.index+1)}" class="form-control"
+                           th:max="${#dates.format(#dates.createNow(), 'yyyy-MM-dd')}" disabled th:onchange="'touchDate('+ ${index.index+1} + ')'">
+                </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="col-sm-2">
+            <!--Для центрирования-->
+        </div>
+        <div class="col-12">
+            <button type="submit" class="btn btn-primary">Добавить</button>
+            <a th:href="'/user/allWaterMeters'" class="btn btn-secondary my-auto">Назад</a>
+        </div>
+    </form>
+</div>
+<div th:insert="blocks/footer :: footer"></div>
+<script th:inline="javascript">
+    function updateValueDate(index){
+        var valueInputValue = document.getElementById('inputValueWaterMeter_' + index).value;
+        if(valueInputValue != ''){
+            var valueInputValue = document.getElementById('inputValueDate_' + index).disabled = false;
+            var valueInputValue = document.getElementById('inputValueDate_' + index).required = true;
+        }
+        else{
+            var valueInputValue = document.getElementById('inputValueDate_' + index).value = '';
+            var valueInputValue = document.getElementById('inputValueDate_' + index).disabled = true;
+        }
+    }
+
+    function touchDate(index){
+        if(dayOff('inputValueDate_' + index) != 0){
+            alert("Выбран не рабочий день. Пожалуйста, выберите другую дату.");
+            document.getElementById('inputValueDate_' + index).value = '';
+        }
+    }
+
+    //Получаю код дня. 0 - рабочий, 1 - не рабочий
+    function dayOff(strElementById){
+        var date = document.getElementById(strElementById).value.replace(/-/g, '');
+        var xhr = new XMLHttpRequest();
+        xhr.withCredentials = false;
+        var responseDayOff;
+        xhr.open("GET", `http://isdayoff.ru/${date}`, false);
+        xhr.send();
+        return xhr.responseText;
+    }
+
+    function getRequest(){
+        var objects = document.getElementsByName("inputValueWaterMeter");
+        var objectsWaterMeter = document.getElementsByName("waterMeterId");
+	    for(var i = 0; i < objects.length; i++){
+	        if(objects[i].value == ''){
+	            objects[i].disabled = true;
+	            objectsWaterMeter[i].disabled = true;
+	        }
+        }
+        return true;
+    }
+</script>
+</body>
+</html>

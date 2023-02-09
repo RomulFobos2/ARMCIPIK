@@ -1,0 +1,147 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Детальнее</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/5.0.0-alpha1/css/bootstrap.min.css">
+</head>
+<body>
+<header th:insert="blocks/header :: header"></header>
+
+<div class="container mt-5" th:each="el : ${measuringTool}">
+    <div class="row g-3">
+        <div class="row g-3 text-dark font-weight-bold">
+            <h5 class="alert-heading">Основная информация</h5>
+
+            <div class="col-sm-6">
+                <label for="inputOfficeName" class="form-label">Наименование филиала</label>
+                <input type="text" class="form-control" name="inputOfficeName" id="inputOfficeName"
+                       th:value="${el.officeName}" disabled>
+            </div>
+
+            <div class="col-sm-6">
+                <label for="inputDepartmentName" class="form-label">Наименование (номер) эксплуатирующего подразделения
+                    филиала</label>
+                <input type="text" class="form-control" name="inputDepartmentName" id="inputDepartmentName"
+                       th:value="${el.departmentName}" disabled>
+            </div>
+
+            <div class="col-sm-3">
+                <!--                Для центрирования)-->
+            </div>
+
+            <div class="col-sm-4">
+                <label for="inputMeasuringToolName" class="form-label">Наименование и тип СИ</label>
+                <input type="text" class="form-control" name="inputMeasuringToolName" id="inputMeasuringToolName"
+                       th:value="${el.measuringToolName}" disabled>
+            </div>
+
+            <div class="col-sm-2">
+                <label for="inputFactoryNumber" class="form-label">Заводской номер СИ</label>
+                <input type="text" class="form-control" name="inputFactoryNumber" id="inputFactoryNumber"
+                       th:value="${el.factoryNumber}" disabled>
+            </div>
+
+            <div class="col-sm-3">
+                <!--                Для центрирования)-->
+            </div>
+        </div>
+
+
+        <div class="row g-3 col-sm-12 alert alert-success text-dark font-weight-bold">
+            <h5 class="alert-heading">Характеристики средства измерения</h5>
+
+            <div class="col-sm-2">
+                <label for="inputMeasuringRange" class="form-label">Диапазон измерений СИ</label>
+                <input type="text" class="form-control" name="inputMeasuringRange" id="inputMeasuringRange"
+                       th:value="${el.measuringRange}" disabled>
+            </div>
+
+            <div class="col-sm-3">
+                <label for="inputAccuracyClass" class="form-label">Класс точности (погрешность) СИ</label>
+                <input type="text" class="form-control" name="inputAccuracyClass" id="inputAccuracyClass"
+                       th:value="${el.accuracyClass}" disabled>
+            </div>
+
+            <div class="col-sm-4">
+                <label for="inputRegistrationNumberStateRegister" class="form-label">Регистрационный номер типа СИ в
+                    Госреестре</label>
+                <input type="text" class="form-control" name="inputRegistrationNumberStateRegister"
+                       id="inputRegistrationNumberStateRegister" th:value="${el.registrationNumberStateRegister}"
+                       disabled>
+            </div>
+
+            <div class="col-sm-3">
+                <label for="inputCountVerification" class="form-label">Периодичность поверки СИ</label>
+                <input type="text" class="form-control" name="inputCountVerification" id="inputCountVerification"
+                       placeholder="Только цифры" title="Только цифры" pattern="\d[0-100]"
+                       th:value="${el.countVerification}" disabled>
+            </div>
+
+            <div class="col-sm-4">
+                <label for="inputScopeOfApplication" class="form-label">Сфера применения СИ</label>
+                <select class="form-select" name="inputScopeOfApplication" id="inputScopeOfApplication" disabled>
+                    <option selected th:if="${el.scopeOfApplication} == false" value="0" th:text="Нет"></option>
+                    <option selected th:if="${el.scopeOfApplication} == true" value="1" th:text="СГОЕИ"></option>
+                </select>
+            </div>
+
+            <div class="col-sm-4">
+                <label for="inputReducedVerification" class="form-label">Сокращенная поверка СИ</label>
+                <select class="form-select" name="inputReducedVerification" id="inputReducedVerification" disabled>
+                    <option selected th:if="${el.reducedVerification} == false" value="0" th:text="Нет"></option>
+                    <option selected th:if="${el.reducedVerification} == true" value="1" th:text="СП"></option>
+                </select>
+            </div>
+
+            <div class="col-sm-4">
+                <label for="inputCheckingGRCM" class="form-label">Поверка СИ в ГРЦМ</label>
+                <select class="form-select" name="inputCheckingGRCM" id="inputCheckingGRCM" disabled>
+                    <option selected th:if="${el.checkingGRCM} == false" value="0" th:text="Нет"></option>
+                    <option selected th:if="${el.checkingGRCM} == true" value="1" th:text="ГРМЦ"></option>
+                </select>
+            </div>
+        </div>
+
+        <div class="col-sm-12 alert alert-primary">
+            <h5 class="alert-heading">Сведения о поверках</h5>
+            <table class="table table-secondary table-bordered text-center table-hover" name="myTab">
+                <tbody>
+                <tr class="table-secondary">
+                    <td>№</td>
+                    <td>Дата поверки СИ</td>
+                    <td>Организация-поверитель, выполнившая поверку СИ</td>
+                    <td>Номер свидетельства/извещения СИ</td>
+                    <td>Пригодность СИ (пригоден/не пригоден)</td>
+                    <td>Дата следующей поверки СИ</td>
+                    <td>Основание для вывода из эксплуатации СИ (в поверке/в ремонте)</td>
+                </tr>
+                <tr class="table-striped" th:each="verification, index : ${allVerifications}">
+                    <td th:text="${index.index+1}">/td>
+                    <td th:text="${#dates.format(verification.verificationDate, 'dd.MM.yyyy')}"></td>
+                    <td th:text="${verification.verifyingOrganization}"></td>
+                    <td th:text="${verification.certificateNumber}"></td>
+                    <td th:if="${verification.availability == true}" th:text="'Пригоден'"></td>
+                    <td th:if="${verification.availability == false}" th:text="'Не пригоден'"></td>
+                    <td th:text="${#dates.format(verification.nextVerificationDate, 'dd.MM.yyyy')}"></td>
+                    <td th:text="${verification.basisForDecommissioning}"></td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="d-flex justify-content-start flex-wrap">
+            <form class="form-row">
+                <a th:if=${haveCurrentVerification} th:href="'/user/allMeasuringTools/measuringTool-details/' + ${el.id} + '/currentVerification/' + ${currentVerification.id}" class="btn btn-info">Текущая поверка</a>
+                <a th:href="'/user/editMeasuringTool/' + ${el.id}" class="btn btn-warning">Редактировать</a>
+                <a th:href="'/user/allMeasuringTools'" class="btn btn-secondary mx-auto">Назад</a>
+            </form>
+            <form th:action="'/user/allMeasuringTools/measuringTool-details/' + ${el.id} +'/remove'" method="post">
+                <button class="btn btn-danger mx-1" type="submit">Удалить</button>
+            </form>
+        </div>
+    </div>
+</div>
+<div th:insert="blocks/footer :: footer"></div>
+</body>
+</html>

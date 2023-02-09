@@ -1,0 +1,131 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Импорт данных</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/5.0.0-alpha1/css/bootstrap.min.css">
+
+    <style>
+html,
+body {
+  height: 100%;
+}
+
+body {
+  display: flex;
+  align-items: center;
+  padding-top: 40px;
+  padding-bottom: 40px;
+  background-color: #f5f5f5;
+}
+
+.form-signin {
+  width: 100%;
+  max-width: 430px;
+  padding: 15px;
+  margin: auto;
+}
+.form-signin .checkbox {
+  font-weight: 400;
+}
+.form-signin .form-control {
+  position: relative;
+  box-sizing: border-box;
+  height: auto;
+  padding: 10px;
+  font-size: 14px;
+}
+.form-signin .form-control:focus {
+  z-index: 2;
+}
+.form-signin input[type="email"] {
+  margin-bottom: -1px;
+  border-bottom-right-radius: 0;
+  border-bottom-left-radius: 0;
+}
+.form-signin input[type="text"] {
+  margin-bottom: -1px;
+  border-bottom-right-radius: 0;
+  border-bottom-left-radius: 0;
+}
+.form-signin input[type="password"] {
+  margin-bottom: -1px;
+  border-top-left-radius: 0;
+  border-top-right-radius: 0;
+}
+.form-signin button[type="submit"] {
+  margin-bottom: 10px;
+  border-top-left-radius: 0;
+  border-top-right-radius: 0;
+}
+.form-signin a{
+
+    font-size: 28px;
+}
+    </style>
+
+</head>
+<!--Ввести подсказку для формата пароля-->
+<!--Требования к паролю: не меньше 8 знаков, содержание заглавных и строчных букв и цифр.-->
+<body class="text-center">
+<main class="form-signin">
+    <div class="container mt-5 mb-5">
+        <form action="/user/allMeters/import" method="post" onsubmit="return getRequest()" enctype="multipart/form-data">
+            <img class="mb-4" src="https://getbootstrap.com/docs/5.0/assets/brand/bootstrap-logo.svg" alt="" width="72"
+                 height="57">
+            <h1 class="h3 mb-3 fw-normal">Импорт данных</h1>
+            <p class="fs-6 text-danger" th:text="${meterNameError}"></p>
+            <div class="row g-3">
+                <div class="col-sm-12">
+                    <select class="form-select" name="inputMeter" id="inputMeter" required>
+                        <option disabled selected value="">Выберите счетчик</option>
+                        <th:each th:each="meter : ${allMeters}">
+                            <option th:value="${meter.id}" th:text="${meter.name}"></option>
+                        </th:each>
+                    </select>
+                </div>
+                <div class="col-sm-8">
+                    <input type="text" class="form-control" name="inputFileText" id="inputFileText" placeholder="Загрузите файл..." disabled>
+                    <input type="file" class="form-control" name="inputFileField" id="inputFileField" hidden onchange="mySelectFile()" accept="application/vnd.ms-excel">
+                </div>
+                <div class="col-sm-4">
+                    <input type="button" class="form-control btn btn-outline-primary" onclick="myClick()" value="Загрузить">
+                </div>
+            </div><br>
+            <button type="submit" class="w-100 btn btn-lg btn-primary">Импортировать данные</button>
+            <a class="p-2 text-dark" th:href="'/user/allMeters'">Вернуться</a>
+            <p class="mt-5 mb-3 text-muted">&copy;2022</p>
+        </form>
+    </div>
+</main>
+</body>
+<script th:inline="javascript">
+            function myClick(){
+	            var btn = document.getElementById("inputFileField");
+	            btn.click();
+	        }
+
+            function mySelectFile(){
+	            var selectedFile = document.getElementById("inputFileField").files[0];
+	            var txt = document.getElementById("inputFileText");
+	            txt.value = "Загружен файл: " + selectedFile.name;
+	        }
+
+	        //Отправка запроса
+	        function getRequest(){
+	            var boolean = true;
+	            var objects = document.getElementsByName("inputFileField");
+	            for(var i = 0; i < objects.length; i++){
+	                if(objects[i].files[0] == null){
+	                    alert("Загрузите необходимые документы");
+	                    boolean = false;
+	                    break;
+	                }
+	            }
+                return boolean;
+	        }
+
+</script>
+</body>
+</html>
+

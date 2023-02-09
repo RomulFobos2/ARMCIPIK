@@ -1,0 +1,64 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Заполнить показания счетчиков водопотребления</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/5.0.0-alpha1/css/bootstrap.min.css">
+
+</head>
+<body>
+<header th:insert="blocks/header :: header"></header>
+
+<div class="container mt-5">
+    <h1>Заполнить показания счетчиков водопотребления</h1>
+    <form method="post" class="row g-3">
+        <div class="col-sm-2">
+<!--Для центрирования-->
+        </div>
+
+        <div class="col-sm-8 alert text-center">
+            <h5 th:if="${isStartMonth}" class="alert-heading">Показания счетчиков водопотребления на начало месяца</h5>
+            <h5 th:if="${!isStartMonth}" class="alert-heading">Показания счетчиков водопотребления на конец месяца</h5>
+            <table class="table table-primary table-bordered text-center table-hover align-middle"  name="myTab">
+                <tbody>
+                <tr>
+                    <td>№</td>
+                    <td>Место установки прибора учета</td>
+                    <td>Марка прибора учета</td>
+                    <td>Заводской номер прибора учета</td>
+                    <td>Показания прибора учета</td>
+                </tr>
+                <tr th:each="dataWaterMeter, index : ${allDataWaterMeters}">
+                    <td th:text="${index.index+1}"></td>
+                    <td th:text="${dataWaterMeter.waterMeter.cabinet}"></td>
+                    <td th:text="${dataWaterMeter.waterMeter.name}"></td>
+                    <td th:text="${dataWaterMeter.waterMeter.factoryNumber}"></td>
+                    <td>
+                        <div class="col-sm-6">
+                            <input type="text" class="form-control" name="dataWaterMeterId" id="dataWaterMeterId"
+                                   placeholder="Невидимое поле, чтобы считать id"
+                                   th:value="${dataWaterMeter.id}" hidden>
+                        </div>
+                        <div class="col-sm-12">
+                            <input type="number" min="0" class="form-control" name="inputValueWaterMeter"
+                                   id="inputValueWaterMeter" th:value="${dataWaterMeter.valueMeter}"
+                                   required placeholder="Показания">
+                        </div>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="col-sm-2">
+            <!--Для центрирования-->
+        </div>
+        <div class="col-12">
+            <button th:if="${allDataWaterMeters.size > 0}" type="submit" class="btn btn-primary">Добавить</button>
+            <a th:href="'/user/allWaterMeters'" class="btn btn-secondary my-auto">Назад</a>
+        </div>
+    </form>
+</div>
+<div th:insert="blocks/footer :: footer"></div>
+</body>
+</html>

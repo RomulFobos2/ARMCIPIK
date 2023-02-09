@@ -1,0 +1,26 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org"   xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
+<head>
+    <title>Профиль</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/5.0.0-alpha1/css/bootstrap.min.css">
+</head>
+<body>
+<header th:insert="blocks/header :: header"></header>
+
+<div class="container mt-5" th:each="el : ${currentUser}">
+    <div class="alert alert-info mt-2">
+        <h1 th:text="${roleName + ': ' + el.fullName}"/>
+        <a>Логин пользователя: </a> <a th:text="${el.username}"/>
+    </div>
+    <div class="d-flex justify-content-start flex-wrap">
+        <form class="form-row">
+            <a th:href="'/'" class="btn btn-secondary mx-auto">Назад</a>
+            <a th:href="'/change-password'" class="btn btn-warning mx-auto">Сменить пароль</a>
+        </form>
+    </div>
+</div>
+<div th:insert="blocks/footer :: footer"></div>
+</body>
+</html>

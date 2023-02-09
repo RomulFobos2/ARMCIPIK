@@ -1,0 +1,26 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Список средств измерения</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/5.0.0-alpha1/css/bootstrap.min.css">
+
+</head>
+<body>
+<header th:insert="blocks/header :: header"></header>
+
+<div class="container mt-5">
+    <h1>Средства измерения которым необходимо пройти поверку</h1>
+    <div th:each="el, index : ${allMeasuringTools}" class="alert alert-info mt-2">
+        <h1 th:text="${index.index + 1 + '. ' + el.measuringToolName + '(' + el.factoryNumber + ').'}"/>
+        <a th:href="'/user/allMeasuringTools/measuringTool-details/' + ${el.id}" class="btn btn-warning">Детальнее</a>
+    </div>
+    <div class="pagination justify-content-start">
+        <div class="d-flex justify-content-start flex-wrap">
+            <a th:href="'/user/allMeasuringTools'" class="btn btn-secondary my-auto">Назад</a>
+        </div>
+    </div>
+</div>
+<div th:insert="blocks/footer :: footer"></div>
+</body>
+</html>

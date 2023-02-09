@@ -1,0 +1,30 @@
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<div th:fragment="header">
+    <div class="d-flex flex-column flex-md-row align-items-center p-3 px-md-4 mb-3 bg-white border-bottom shadow-sm">
+
+        <h5 sec:authorize="isAuthenticated()" class="my-0 mr-md-auto font-weight-normal" onclick="window.location.href = '/profile'"
+            role="button"><a sec:authentication="principal.fullName"/></h5>
+        <h5 sec:authorize="!isAuthenticated()" class="my-0 mr-md-auto font-weight-normal">Гость</h5>
+
+        <nav class="my-2 my-md-0 mr-md-3">
+            <a sec:authorize="!isAuthenticated()" class="p-2 text-dark" href="/">Главная</a>
+            <a sec:authorize="!isAuthenticated()" class="btn btn-outline-primary" href="/login">Вход</a>
+            <a sec:authorize="hasRole('ROLE_ADMIN')"  class="p-2 text-dark" href="/admin">Администрирование</a>
+            <a sec:authorize="hasRole('ROLE_ADMIN')"  class="p-2 text-dark" href="/admin/allUsers">Пользователи</a>
+            <a sec:authorize="hasRole('ROLE_ADMIN')"  class="p-2 text-dark" href="/admin/allDepartments">Структурные подразделения</a>
+
+            <a sec:authorize="hasRole('ROLE_USER')"  class="p-2 text-dark" href="/user">Рабочая область</a>
+            <a sec:authorize="hasRole('ROLE_USER')"  class="p-2 text-dark" href="/user/allMeasuringTools">Средства измерения</a>
+            <a sec:authorize="hasRole('ROLE_USER')"  class="p-2 text-dark" href="/user/allMeters">Показания счетчиков учета электропотребления</a>
+            <a sec:authorize="hasRole('ROLE_USER')"  class="p-2 text-dark" href="/user/allWeekRequests">Заявки на отпуск электроэнергии</a>
+            <a sec:authorize="hasRole('ROLE_USER')"  class="p-2 text-dark" href="/user/allWaterMeters">Учет водопотребления</a>
+            <a sec:authorize="hasRole('ROLE_USER')"  class="p-2 text-dark" href="/user/allPPEs">СИЗ</a>
+            <a sec:authorize="hasRole('ROLE_USER')"  class="p-2 text-dark" href="/user/bill">Накладная</a>
+
+
+        </nav>
+        <form th:action="@{/logout}" method="post">
+            <input sec:authorize="isAuthenticated()" type="submit" class="btn btn-outline-primary" value="Выход"/>
+        </form>
+    </div>
+</div>

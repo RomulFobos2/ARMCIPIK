@@ -1,0 +1,55 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Детальнее</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/5.0.0-alpha1/css/bootstrap.min.css">
+</head>
+<body>
+<header th:insert="blocks/header :: header"></header>
+
+<div class="container mt-5">
+    <div class="alert alert-info mt-2">
+        <h1 th:text="${ppe.name}"/>
+        </a><a th:text="${'Количество: ' + ppe.count}"/>
+        <br>
+        </a><a th:text="${'Дата испытания: ' + #dates.format(ppe.testDate, 'dd.MM.yyyy')}"/>
+    </div>
+
+    <div class="col-sm-12 alert alert-primary">
+        <h5 class="alert-heading">Сведения о испытаниях</h5>
+        <table class="table table-secondary table-bordered text-center table-hover" name="myTab">
+            <tbody>
+            <tr class="table-secondary">
+                <td>№</td>
+                <td>Дата испытания</td>
+                <td>Проведено/Не проведено</td>
+                <td>ФИО проводившего испытания</td>
+            </tr>
+            <tr class="table-striped" th:each="dataPPE, index : ${ppe.allDataPPEs}">
+                <td th:text="${index.index+1}">/td>
+                <td th:text="${#dates.format(dataPPE.dateOfDataPPE, 'dd.MM.yyyy')}"></td>
+                <td th:if="${dataPPE.finishTest}">Проведено</td>
+                <td th:if="${!dataPPE.finishTest}">Не проведено</td>
+                <td th:if="${dataPPE.user != null}" th:text="${dataPPE.user.fullName}"></td>
+                <td th:if="${dataPPE.user == null}"></td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div class="row g-3">
+        <div class="d-flex justify-content-start flex-wrap">
+            <form class="form-row">
+                <a th:href="'/user/editPPE/' + ${ppe.id}" class="btn btn-warning">Редактировать</a>
+                <a th:href="'/user/allPPEs'" class="btn btn-secondary mx-auto">Назад</a>
+            </form>
+            <form th:action="'/user/allPPEs/ppe-details/' + ${ppe.id} +'/remove'" method="post">
+                <button class="btn btn-danger mx-1" type="submit">Удалить</button>
+            </form>
+        </div>
+    </div>
+</div>
+<div th:insert="blocks/footer :: footer"></div>
+</body>
+</html>

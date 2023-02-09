@@ -1,0 +1,131 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Добавить средство измерения</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/5.0.0-alpha1/css/bootstrap.min.css">
+</head>
+<body>
+<header th:insert="blocks/header :: header"></header>
+<div class="container-sm">
+    <h1>Поверка СИ</h1>
+    <form method="post" class="row g-3">
+        <div class="row g-3 col-sm-12 alert alert-primary text-dark font-weight-bold">
+            <h5 class="alert-heading">Сведения о поверки</h5>
+            <div class="col-sm-2">
+                <label for="inputVerificationDate" class="form-label">Дата поверки СИ</label>
+                <input type="date" name="inputVerificationDate" id="inputVerificationDate" class="form-control"
+                       th:max="${#dates.format(#dates.createNow(), 'yyyy-MM-dd')}"
+                       onchange="touchDate()">
+            </div>
+
+            <div class="col-sm-4">
+                <label for="inputVerifyingOrganization" class="form-label">Организация-поверитель, выполнившая
+                    поверку</label>
+                <input type="text" class="form-control" name="inputVerifyingOrganization"
+                       id="inputVerifyingOrganization"
+                       required>
+            </div>
+
+            <div class="col-sm-3">
+                <label for="inputCertificateNumber" class="form-label">Номер свидетельства/извещения СИ</label>
+                <input type="text" class="form-control" name="inputCertificateNumber" id="inputCertificateNumber"
+                       required>
+            </div>
+
+            <div class="col-sm-3">
+                <label for="inputAvailability" class="form-label">Пригодность СИ</label>
+                <select class="form-select" name="inputAvailability" id="inputAvailability" required
+                        onchange="touchSelect()">
+                    <option value="0">Не пригоден</option>
+                    <option selected value="1">Пригоден</option>
+                </select>
+            </div>
+
+            <div class="col-sm-3">
+                <label for="inputNextVerificationDate" class="form-label">Дата следующей поверки СИ</label>
+                <input type="date" name="inputNextVerificationDate" id="inputNextVerificationDate"
+                       class="form-control"
+                       th:min="${#dates.format(#dates.createNow(), 'yyyy-MM-dd')}"
+                       onchange="checkNextVerDate()">
+            </div>
+
+            <div class="col-sm-9">
+                <label for="inputBasisForDecommissioning" class="form-label">Основание для вывода из эксплуатации СИ
+                    (в
+                    поверке/в ремонте)</label>
+                <input type="text" class="form-control" name="inputBasisForDecommissioning"
+                       id="inputBasisForDecommissioning" disabled required>
+            </div>
+
+        </div>
+        <div class="col-12">
+            <button type="submit" class="btn btn-primary">Добавить</button>
+            <a th:href="'/user/allMeasuringTools'" class="btn btn-secondary my-2">Вернуться</a>
+        </div>
+    </form>
+</div>
+<div th:insert="blocks/footer :: footer"></div>
+<script th:inline="javascript">
+ var countVerification = /*[[${countVerification}]]*/;
+
+ function touchSelect(){
+        var inputAvailability = document.getElementById('inputAvailability');
+        document.getElementById('inputBasisForDecommissioning').value = "";
+        if(inputAvailability.value == 0){
+            document.getElementById('inputBasisForDecommissioning').disabled = false;
+        }
+        else{
+            document.getElementById('inputBasisForDecommissioning').disabled = true;
+        }
+    }
+
+    function touchDate(){
+        if(dayOff('inputVerificationDate') != 0){
+            alert("Выбран не рабочий день для поверки. Пожалуйста, выберите другую дату.");
+            document.getElementById('inputVerificationDate').value = '';
+            document.getElementById('inputNextVerificationDate').value = '';
+        }
+        else{
+            var countMonth = countVerification;
+            var strDate = document.getElementById('inputVerificationDate').value;
+            var date = new Date(strDate);
+            date.setMonth(date.getMonth()*1 + countMonth*1);
+            document.getElementById('inputNextVerificationDate').valueAsDate = date;
+            while(dayOff('inputNextVerificationDate') != 0){
+                var strDateNext = document.getElementById('inputNextVerificationDate').value;
+                var dateNext = new Date(strDateNext);
+                dateNext.setDate(dateNext.getDate()*1-1)
+                document.getElementById('inputNextVerificationDate').valueAsDate = dateNext;
+            }
+        }
+    }
+
+    //Получаю код дня. 0 - рабочий, 1 - не рабочий
+    function dayOff(strElementById){
+        var date = document.getElementById(strElementById).value.replace(/-/g, '');
+        var xhr = new XMLHttpRequest();
+        xhr.withCredentials = false;
+        var responseDayOff;
+        xhr.open("GET", `http://isdayoff.ru/${date}`, false);
+        xhr.send();
+        return xhr.responseText;
+    }
+
+    //Если пользователь меняют дату следующей поверки, ставим ее обратно в зависимости от даты последней поверки
+    function checkNextVerDate(){
+        if(document.getElementById('inputVerificationDate').value == ''){
+            alert("Вначале выберите дату уже прошедшей поверки");
+            document.getElementById('inputNextVerificationDate').value = '';
+        }
+        else{
+            touchDate();
+        }
+    }
+
+
+</script>
+</body>
+</html>
+
+
